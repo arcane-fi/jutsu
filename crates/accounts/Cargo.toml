@@ -11,3 +11,4 @@ pinocchio.workspace = true
 pinocchio-system.workspace = true
 jutsu-errors.workspace = true
 jutsu-utility.workspace = true
+jutsu-ser.workspace = true

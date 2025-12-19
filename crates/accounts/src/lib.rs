@@ -9,6 +9,7 @@ pub use accounts::{
     signer::*,
     system_account::*,
     unchecked_account::*,
+    zc_account::*,
 };
 
 use pinocchio::{account_info::AccountInfo, pubkey::Pubkey};
@@ -24,14 +25,6 @@ pub trait Key {
 
 pub trait ToAccountInfo<'a> {
     fn to_account_info(&self) -> &'a AccountInfo;
-}
-
-pub trait OwnerProgram {
-    const OWNER: Pubkey;
-
-    fn owner() -> Pubkey {
-        Self::OWNER
-    }
 }
 
 pub trait AccountInitializer<'a> {

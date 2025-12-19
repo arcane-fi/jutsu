@@ -5,7 +5,7 @@
 use borsh::BorshDeserialize;
 use pinocchio::{account_info::{AccountInfo, Ref, RefMut}, hint::unlikely, program_error::ProgramError};
 use bytemuck::{AnyBitPattern, Pod};
-use jutsu_accounts::OwnerProgram;
+use jutsu_utility::OwnerProgram;
 use jutsu_discriminator::Discriminator;
 #[cfg(feature = "std")]
 use jutsu_utility::{fail_with_ctx_no_return, program_error};

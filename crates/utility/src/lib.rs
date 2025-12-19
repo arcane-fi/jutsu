@@ -7,7 +7,7 @@
 pub mod macros;
 
 use jutsu_errors::Result;
-use pinocchio::program_error::ProgramError;
+use pinocchio::{pubkey::Pubkey, program_error::ProgramError};
 
 pub trait Len
 where 
@@ -25,4 +25,13 @@ pub fn take_bytes<'a>(data: &'a [u8], n: usize) -> Result<(&'a [u8], &'a [u8])> 
         );
     }
     Ok(data.split_at(n))
+}
+
+
+pub trait OwnerProgram {
+    const OWNER: Pubkey;
+
+    fn owner() -> Pubkey {
+        Self::OWNER
+    }
 }
