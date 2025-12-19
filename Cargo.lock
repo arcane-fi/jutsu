@@ -139,6 +139,7 @@ dependencies = [
  "jutsu-discriminator-derive",
  "jutsu-errors",
  "jutsu-errors-derive",
+ "jutsu-instruction-attribute-macro",
  "jutsu-pda",
  "jutsu-ser",
  "jutsu-utility",
@@ -192,6 +193,15 @@ name = "jutsu-errors-derive"
 version = "0.1.0"
 dependencies = [
  "jutsu-syn",
+ "proc-macro2",
+ "quote",
+ "syn",
+]
+
+[[package]]
+name = "jutsu-instruction-attribute-macro"
+version = "0.1.0"
+dependencies = [
  "proc-macro2",
  "quote",
  "syn",

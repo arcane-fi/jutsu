@@ -22,3 +22,4 @@ jutsu-accounts.workspace = true
 jutsu-context.workspace = true
 jutsu-utility.workspace = true
 jutsu-ser.workspace = true
+jutsu-instruction-attribute-macro.workspace = true

@@ -32,4 +32,4 @@ jutsu-pda = { path = "crates/pda" }
 jutsu-utility = { path = "crates/utility" }
 jutsu-context = { path = "crates/context" }
 jutsu-ser = { path = "crates/ser" }
-
+jutsu-instruction-attribute-macro = { path = "crates/instruction-attribute-macro" }
