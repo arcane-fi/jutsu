@@ -135,6 +135,7 @@ dependencies = [
  "bytemuck",
  "jutsu-accounts",
  "jutsu-context",
+ "jutsu-cpi",
  "jutsu-discriminator",
  "jutsu-discriminator-derive",
  "jutsu-errors",
@@ -170,6 +171,15 @@ dependencies = [
  "jutsu-errors",
  "jutsu-utility",
  "pinocchio",
+]
+
+[[package]]
+name = "jutsu-cpi"
+version = "0.1.0"
+dependencies = [
+ "jutsu-errors",
+ "pinocchio",
+ "pinocchio-system",
 ]
 
 [[package]]

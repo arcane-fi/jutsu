@@ -10,6 +10,7 @@ pub mod instruction {
 pub mod prelude {
     pub use super::instruction;
 
+    pub use jutsu_cpi::*;
     pub use jutsu_discriminator::Discriminator;
     pub use jutsu_discriminator_derive::Discriminator;
     pub use jutsu_errors::ErrorCode;

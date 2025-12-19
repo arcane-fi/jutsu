@@ -13,6 +13,7 @@ std = ["pinocchio/std"]
 bytemuck.workspace = true
 pinocchio.workspace = true
 pinocchio-pubkey.workspace = true
+jutsu-cpi.workspace = true
 jutsu-discriminator.workspace = true
 jutsu-discriminator-derive.workspace = true
 jutsu-errors.workspace = true
