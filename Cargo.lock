@@ -260,6 +260,7 @@ version = "0.1.0"
 dependencies = [
  "borsh",
  "bytemuck",
+ "jutsu-cpi",
  "jutsu-discriminator",
  "jutsu-errors",
  "jutsu-utility",

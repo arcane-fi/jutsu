@@ -16,3 +16,4 @@ bytemuck.workspace = true
 jutsu-discriminator.workspace = true
 jutsu-utility.workspace = true
 jutsu-errors.workspace = true
+jutsu-cpi.workspace = true

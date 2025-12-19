@@ -6,6 +6,7 @@
 mod accounts;
 pub use accounts::{
     mutable::*,
+    program::*,
     signer::*,
     system_account::*,
     unchecked_account::*,
@@ -29,4 +30,8 @@ pub trait ToAccountInfo<'a> {
 
 pub trait AccountInitializer<'a> {
     fn initialize_account(&self, account_data: &[u8]) -> Result<()>;
+}
+
+pub trait ProgramId {
+    const ID: Pubkey;
 }

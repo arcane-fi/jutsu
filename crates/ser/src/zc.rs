@@ -3,7 +3,7 @@
 
 #[cfg(feature = "std")]
 use borsh::BorshDeserialize;
-use pinocchio::{account_info::{AccountInfo, Ref, RefMut}, hint::unlikely, program_error::ProgramError};
+use pinocchio::{account_info::{AccountInfo, Ref, RefMut}, hint::unlikely, instruction::Signer, program_error::ProgramError, pubkey::Pubkey};
 use bytemuck::{AnyBitPattern, Pod};
 use jutsu_utility::OwnerProgram;
 use jutsu_discriminator::Discriminator;
@@ -11,6 +11,7 @@ use jutsu_discriminator::Discriminator;
 use jutsu_utility::{fail_with_ctx_no_return, program_error};
 use jutsu_utility::{fail_with_ctx, Len};
 use jutsu_errors::{Result, ErrorCode};
+use jutsu_cpi::create_account;
 
 pub trait ZcDeserialize
 where 
@@ -28,6 +29,12 @@ where
         account_info: &'a AccountInfo,
     ) -> Result<RefMut<'a, Self>> {
         let account_ref = try_deserialize_zc_mut::<Self>(account_info)?;
+
+        Ok(account_ref)
+    }
+
+    fn try_initialize_zc<'a>(init_accounts: InitAccounts<'a>, signers: Option<&[Signer]>) -> Result<RefMut<'a, Self>> {
+        let account_ref = try_initialize_zc::<Self>(init_accounts, signers)?;
 
         Ok(account_ref)
     }
@@ -107,6 +114,50 @@ where
             &T::DISCRIMINATOR,
         );
     }
+
+    Ok(RefMut::map(data, |d| bytemuck::from_bytes_mut(&mut d[8..T::DISCRIMINATED_LEN])))
+}
+
+pub struct InitAccounts<'a> {
+    pub owner_program_id: &'a Pubkey,
+    pub target_account: &'a AccountInfo,
+    pub payer_account: &'a AccountInfo,
+    pub system_program: &'a AccountInfo,
+}
+
+impl<'a> InitAccounts<'a> {
+    #[inline(always)]
+    pub fn new(
+        owner_program_id: &'a Pubkey,
+        target_account: &'a AccountInfo,
+        payer_account: &'a AccountInfo,
+        system_program: &'a AccountInfo,
+    ) -> Self {
+        Self {
+            owner_program_id,
+            target_account,
+            payer_account,
+            system_program,
+        }
+    }
+}
+
+pub fn try_initialize_zc<'a, T>(init_accounts: InitAccounts<'a>, signers: Option<&[Signer]>) -> Result<RefMut<'a, T>>
+where 
+    T: Pod + Discriminator + Len + OwnerProgram,
+{
+    // if the account already allocated, this will error, guarantees that the account is uninitialized
+    create_account(
+        init_accounts.owner_program_id,
+        init_accounts.target_account,
+        init_accounts.payer_account,
+        signers,
+        T::DISCRIMINATED_LEN as u64,
+    )?;
+
+    let mut data = init_accounts.target_account.try_borrow_mut_data()?;
+
+    data[..8].copy_from_slice(T::DISCRIMINATOR);
 
     Ok(RefMut::map(data, |d| bytemuck::from_bytes_mut(&mut d[8..T::DISCRIMINATED_LEN])))
 }
