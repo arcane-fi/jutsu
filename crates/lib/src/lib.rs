@@ -15,11 +15,12 @@ pub mod prelude {
     pub use jutsu_errors::ErrorCode;
     pub use jutsu_errors_derive::JutsuError;
     pub use jutsu_instruction_attribute_macro::instruction;
+    pub use jutsu_instruction_dispatch_macro::dispatch;
     pub use jutsu_pda::*;
     pub use jutsu_accounts::*;
     pub use jutsu_context::*;
     pub use jutsu_ser::*;
-    pub use jutsu_utility::*;
+    pub use jutsu_utility::{*, take_bytes};
     pub use jutsu_errors::Result;
 
     #[cfg(not(feature = "std"))]

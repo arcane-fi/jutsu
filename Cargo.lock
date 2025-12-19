@@ -140,6 +140,7 @@ dependencies = [
  "jutsu-errors",
  "jutsu-errors-derive",
  "jutsu-instruction-attribute-macro",
+ "jutsu-instruction-dispatch-macro",
  "jutsu-pda",
  "jutsu-ser",
  "jutsu-utility",
@@ -206,6 +207,10 @@ dependencies = [
  "quote",
  "syn",
 ]
+
+[[package]]
+name = "jutsu-instruction-dispatch-macro"
+version = "0.1.0"
 
 [[package]]
 name = "jutsu-pda"

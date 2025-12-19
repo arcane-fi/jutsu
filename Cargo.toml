@@ -33,3 +33,4 @@ jutsu-utility = { path = "crates/utility" }
 jutsu-context = { path = "crates/context" }
 jutsu-ser = { path = "crates/ser" }
 jutsu-instruction-attribute-macro = { path = "crates/instruction-attribute-macro" }
+jutsu-instruction-dispatch-macro = { path = "crates/instruction-dispatch-macro" }
