@@ -119,6 +119,185 @@ source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "841d1cc9bed7f9236f321df977030373f4a4163ae1a7dbfe1a51a2c1a51d9100"
 
 [[package]]
+name = "hayabusa"
+version = "0.1.0"
+dependencies = [
+ "bytemuck",
+ "hayabusa-accounts",
+ "hayabusa-context",
+ "hayabusa-cpi",
+ "hayabusa-discriminator",
+ "hayabusa-discriminator-derive",
+ "hayabusa-errors",
+ "hayabusa-from-account-infos-derive",
+ "hayabusa-instruction-attribute-macro",
+ "hayabusa-instruction-dispatch-macro",
+ "hayabusa-len-derive",
+ "hayabusa-owner-program-derive",
+ "hayabusa-pda",
+ "hayabusa-ser",
+ "hayabusa-ser-derive",
+ "hayabusa-utility",
+ "pinocchio",
+ "pinocchio-pubkey",
+]
+
+[[package]]
+name = "hayabusa-accounts"
+version = "0.1.0"
+dependencies = [
+ "hayabusa-errors",
+ "hayabusa-ser",
+ "hayabusa-system-program",
+ "hayabusa-utility",
+ "pinocchio",
+]
+
+[[package]]
+name = "hayabusa-context"
+version = "0.1.0"
+dependencies = [
+ "hayabusa-accounts",
+ "hayabusa-errors",
+ "hayabusa-utility",
+ "pinocchio",
+]
+
+[[package]]
+name = "hayabusa-cpi"
+version = "0.1.0"
+dependencies = [
+ "hayabusa-errors",
+ "hayabusa-utility",
+ "pinocchio",
+ "pinocchio-pubkey",
+]
+
+[[package]]
+name = "hayabusa-discriminator"
+version = "0.1.0"
+
+[[package]]
+name = "hayabusa-discriminator-derive"
+version = "0.1.0"
+dependencies = [
+ "proc-macro2",
+ "quote",
+ "sha2",
+ "syn",
+]
+
+[[package]]
+name = "hayabusa-errors"
+version = "0.1.0"
+dependencies = [
+ "pinocchio",
+]
+
+[[package]]
+name = "hayabusa-from-account-infos-derive"
+version = "0.1.0"
+dependencies = [
+ "proc-macro2",
+ "quote",
+ "syn",
+]
+
+[[package]]
+name = "hayabusa-instruction-attribute-macro"
+version = "0.1.0"
+dependencies = [
+ "proc-macro2",
+ "quote",
+ "syn",
+]
+
+[[package]]
+name = "hayabusa-instruction-dispatch-macro"
+version = "0.1.0"
+
+[[package]]
+name = "hayabusa-len-derive"
+version = "0.1.0"
+dependencies = [
+ "proc-macro2",
+ "quote",
+ "sha2",
+ "syn",
+]
+
+[[package]]
+name = "hayabusa-owner-program-derive"
+version = "0.1.0"
+dependencies = [
+ "proc-macro2",
+ "quote",
+ "sha2",
+ "syn",
+]
+
+[[package]]
+name = "hayabusa-pda"
+version = "0.1.0"
+dependencies = [
+ "hayabusa-errors",
+ "pinocchio",
+]
+
+[[package]]
+name = "hayabusa-ser"
+version = "0.1.0"
+dependencies = [
+ "borsh",
+ "bytemuck",
+ "hayabusa-cpi",
+ "hayabusa-discriminator",
+ "hayabusa-errors",
+ "hayabusa-system-program",
+ "hayabusa-utility",
+ "pinocchio",
+]
+
+[[package]]
+name = "hayabusa-ser-derive"
+version = "0.1.0"
+dependencies = [
+ "proc-macro2",
+ "quote",
+ "sha2",
+ "syn",
+]
+
+[[package]]
+name = "hayabusa-system-program"
+version = "0.1.0"
+dependencies = [
+ "hayabusa-cpi",
+ "hayabusa-errors",
+ "pinocchio",
+ "pinocchio-pubkey",
+]
+
+[[package]]
+name = "hayabusa-token"
+version = "0.1.0"
+dependencies = [
+ "hayabusa-cpi",
+ "hayabusa-errors",
+ "hayabusa-utility",
+ "pinocchio",
+ "pinocchio-pubkey",
+]
+
+[[package]]
+name = "hayabusa-utility"
+version = "0.1.0"
+dependencies = [
+ "hayabusa-errors",
+ "pinocchio",
+]
+
+[[package]]
 name = "indexmap"
 version = "2.12.1"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -126,172 +305,6 @@ checksum = "0ad4bb2b565bca0645f4d68c5c9af97fba094e9791da685bf83cb5f3ce74acf2"
 dependencies = [
  "equivalent",
  "hashbrown",
-]
-
-[[package]]
-name = "jutsu"
-version = "0.1.0"
-dependencies = [
- "bytemuck",
- "jutsu-accounts",
- "jutsu-context",
- "jutsu-cpi",
- "jutsu-discriminator",
- "jutsu-discriminator-derive",
- "jutsu-errors",
- "jutsu-errors-derive",
- "jutsu-instruction-attribute-macro",
- "jutsu-instruction-dispatch-macro",
- "jutsu-len-derive",
- "jutsu-owner-program-derive",
- "jutsu-pda",
- "jutsu-ser",
- "jutsu-ser-derive",
- "jutsu-utility",
- "pinocchio",
- "pinocchio-pubkey",
-]
-
-[[package]]
-name = "jutsu-accounts"
-version = "0.1.0"
-dependencies = [
- "jutsu-errors",
- "jutsu-ser",
- "jutsu-utility",
- "pinocchio",
- "pinocchio-system",
-]
-
-[[package]]
-name = "jutsu-context"
-version = "0.1.0"
-dependencies = [
- "jutsu-accounts",
- "jutsu-errors",
- "jutsu-utility",
- "pinocchio",
-]
-
-[[package]]
-name = "jutsu-cpi"
-version = "0.1.0"
-dependencies = [
- "jutsu-errors",
- "pinocchio",
- "pinocchio-system",
-]
-
-[[package]]
-name = "jutsu-discriminator"
-version = "0.1.0"
-
-[[package]]
-name = "jutsu-discriminator-derive"
-version = "0.1.0"
-dependencies = [
- "proc-macro2",
- "quote",
- "sha2",
- "syn",
-]
-
-[[package]]
-name = "jutsu-errors"
-version = "0.1.0"
-dependencies = [
- "pinocchio",
-]
-
-[[package]]
-name = "jutsu-errors-derive"
-version = "0.1.0"
-dependencies = [
- "jutsu-syn",
- "proc-macro2",
- "quote",
- "syn",
-]
-
-[[package]]
-name = "jutsu-instruction-attribute-macro"
-version = "0.1.0"
-dependencies = [
- "proc-macro2",
- "quote",
- "syn",
-]
-
-[[package]]
-name = "jutsu-instruction-dispatch-macro"
-version = "0.1.0"
-
-[[package]]
-name = "jutsu-len-derive"
-version = "0.1.0"
-dependencies = [
- "proc-macro2",
- "quote",
- "sha2",
- "syn",
-]
-
-[[package]]
-name = "jutsu-owner-program-derive"
-version = "0.1.0"
-dependencies = [
- "proc-macro2",
- "quote",
- "sha2",
- "syn",
-]
-
-[[package]]
-name = "jutsu-pda"
-version = "0.1.0"
-dependencies = [
- "jutsu-errors",
- "pinocchio",
-]
-
-[[package]]
-name = "jutsu-ser"
-version = "0.1.0"
-dependencies = [
- "borsh",
- "bytemuck",
- "jutsu-cpi",
- "jutsu-discriminator",
- "jutsu-errors",
- "jutsu-utility",
- "pinocchio",
-]
-
-[[package]]
-name = "jutsu-ser-derive"
-version = "0.1.0"
-dependencies = [
- "proc-macro2",
- "quote",
- "sha2",
- "syn",
-]
-
-[[package]]
-name = "jutsu-syn"
-version = "0.1.0"
-dependencies = [
- "proc-macro2",
- "quote",
- "syn",
-]
-
-[[package]]
-name = "jutsu-utility"
-version = "0.1.0"
-dependencies = [
- "jutsu-errors",
- "pinocchio",
 ]
 
 [[package]]
@@ -327,16 +340,6 @@ dependencies = [
  "five8_const",
  "pinocchio",
  "sha2-const-stable",
-]
-
-[[package]]
-name = "pinocchio-system"
-version = "0.3.0"
-source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "141ed5eafb4ab04568bb0e224e3dc9a9de13c933de4c004e0d1a553498be3a7c"
-dependencies = [
- "pinocchio",
- "pinocchio-pubkey",
 ]
 
 [[package]]
@@ -413,6 +416,10 @@ dependencies = [
  "quote",
  "unicode-ident",
 ]
+
+[[package]]
+name = "token2022"
+version = "0.1.0"
 
 [[package]]
 name = "toml_datetime"

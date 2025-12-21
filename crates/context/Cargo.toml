@@ -1,5 +1,5 @@
 [package]
-name = "jutsu-context"
+name = "hayabusa-context"
 version.workspace = true
 edition.workspace = true
 license.workspace = true
@@ -8,6 +8,6 @@ rust-version.workspace = true
 
 [dependencies]
 pinocchio.workspace = true
-jutsu-accounts.workspace = true
-jutsu-errors.workspace = true
-jutsu-utility.workspace = true
+hayabusa-accounts.workspace = true
+hayabusa-errors.workspace = true
+hayabusa-utility.workspace = true

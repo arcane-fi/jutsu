@@ -1,6 +1,6 @@
 // Copyright (c) 2025, Arcane Labs <dev@arcane.fi>
 // SPDX-License-Identifier: Apache-2.0
 
-mod errors;
+#![no_std]
 
-pub use errors::*;
+pinocchio_pubkey::declare_id!("TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA");

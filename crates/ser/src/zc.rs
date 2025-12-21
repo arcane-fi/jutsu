@@ -3,37 +3,43 @@
 
 #[cfg(feature = "std")]
 use borsh::BorshDeserialize;
-use pinocchio::{account_info::{AccountInfo, Ref, RefMut}, hint::unlikely, instruction::Signer, program_error::ProgramError, pubkey::Pubkey};
 use bytemuck::{AnyBitPattern, Pod};
-use jutsu_utility::OwnerProgram;
-use jutsu_discriminator::Discriminator;
+use hayabusa_cpi::CpiCtx;
+use hayabusa_discriminator::Discriminator;
+use hayabusa_errors::{ErrorCode, Result};
+use hayabusa_system_program::instructions::{create_account, CreateAccount};
+use hayabusa_utility::{fail_with_ctx, Len, OwnerProgram};
 #[cfg(feature = "std")]
-use jutsu_utility::{fail_with_ctx_no_return, program_error};
-use jutsu_utility::{fail_with_ctx, Len};
-use jutsu_errors::{Result, ErrorCode};
-use jutsu_cpi::create_account;
+use hayabusa_utility::{fail_with_ctx_no_return, program_error};
+use pinocchio::{
+    account_info::{AccountInfo, Ref, RefMut},
+    hint::unlikely,
+    instruction::Signer,
+    program_error::ProgramError,
+    pubkey::Pubkey,
+};
 
 pub trait ZcDeserialize
-where 
+where
     Self: Pod + Discriminator + Len + OwnerProgram,
 {
-    fn try_deserialize_zc<'a>(
-        account_info: &'a AccountInfo,
-    ) -> Result<Ref<'a, Self>> {
+    fn try_deserialize_zc<'a>(account_info: &'a AccountInfo) -> Result<Ref<'a, Self>> {
         let account_ref = try_deserialize_zc::<Self>(account_info)?;
 
         Ok(account_ref)
     }
 
-    fn try_deserialize_zc_mut<'a>(
-        account_info: &'a AccountInfo,
-    ) -> Result<RefMut<'a, Self>> {
+    fn try_deserialize_zc_mut<'a>(account_info: &'a AccountInfo) -> Result<RefMut<'a, Self>> {
         let account_ref = try_deserialize_zc_mut::<Self>(account_info)?;
 
         Ok(account_ref)
     }
 
-    fn try_initialize_zc<'a>(target_account: &'a AccountInfo, init_accounts: InitAccounts<'a>, signers: Option<&[Signer]>) -> Result<RefMut<'a, Self>> {
+    fn try_initialize_zc<'a>(
+        target_account: &'a AccountInfo,
+        init_accounts: InitAccounts<'a>,
+        signers: Option<&[Signer]>,
+    ) -> Result<RefMut<'a, Self>> {
         let account_ref = try_initialize_zc::<Self>(target_account, init_accounts, signers)?;
 
         Ok(account_ref)
@@ -41,12 +47,12 @@ where
 }
 
 pub fn try_deserialize_zc<'a, T>(account_info: &'a AccountInfo) -> Result<Ref<'a, T>>
-where 
+where
     T: AnyBitPattern + Discriminator + Len + OwnerProgram,
-{   
+{
     if unlikely(&T::OWNER != account_info.owner()) {
         fail_with_ctx!(
-            "JUTSU_SER_WRONG_ACCOUNT_OWNER",
+            "HAYABUSA_SER_WRONG_ACCOUNT_OWNER",
             ProgramError::InvalidAccountOwner,
             account_info.key(),
             &T::OWNER,
@@ -58,7 +64,7 @@ where
 
     if unlikely(data.len() != T::DISCRIMINATED_LEN) {
         fail_with_ctx!(
-            "JUTSU_SER_ACCOUNT_DATA_TOO_SHORT",
+            "HAYABUSA_SER_ACCOUNT_DATA_TOO_SHORT",
             ErrorCode::InvalidAccount,
             account_info.key(),
         );
@@ -68,7 +74,7 @@ where
 
     if unlikely(disc_bytes != T::DISCRIMINATOR) {
         fail_with_ctx!(
-            "JUTSU_SER_INVALID_DISCRIMINATOR",
+            "HAYABUSA_SER_INVALID_DISCRIMINATOR",
             ErrorCode::InvalidAccountDiscriminator,
             account_info.key(),
             disc_bytes,
@@ -76,16 +82,18 @@ where
         );
     }
 
-    Ok(Ref::map(data, |d| bytemuck::from_bytes(&d[8..T::DISCRIMINATED_LEN])))
+    Ok(Ref::map(data, |d| {
+        bytemuck::from_bytes(&d[8..T::DISCRIMINATED_LEN])
+    }))
 }
 
 pub fn try_deserialize_zc_mut<'a, T>(account_info: &'a AccountInfo) -> Result<RefMut<'a, T>>
-where 
+where
     T: Pod + Discriminator + Len + OwnerProgram,
 {
     if unlikely(&T::OWNER != account_info.owner()) {
         fail_with_ctx!(
-            "JUTSU_SER_MUT_INVALID_OWNER",
+            "HAYABUSA_SER_MUT_INVALID_OWNER",
             ProgramError::InvalidAccountOwner,
             account_info.key(),
             &T::OWNER,
@@ -97,7 +105,7 @@ where
 
     if unlikely(data.len() != T::DISCRIMINATED_LEN) {
         fail_with_ctx!(
-            "JUTSU_SER_MUT_ACCOUNT_DATA_TOO_SHORT",
+            "HAYABUSA_SER_MUT_ACCOUNT_DATA_TOO_SHORT",
             ProgramError::InvalidAccountData,
             account_info.key(),
         );
@@ -107,7 +115,7 @@ where
 
     if unlikely(disc_bytes != T::DISCRIMINATOR) {
         fail_with_ctx!(
-            "JUTSU_SER_MUT_INVALID_DISCRIMINATOR",
+            "HAYABUSA_SER_MUT_INVALID_DISCRIMINATOR",
             ErrorCode::InvalidAccountDiscriminator,
             account_info.key(),
             disc_bytes,
@@ -115,7 +123,9 @@ where
         );
     }
 
-    Ok(RefMut::map(data, |d| bytemuck::from_bytes_mut(&mut d[8..T::DISCRIMINATED_LEN])))
+    Ok(RefMut::map(data, |d| {
+        bytemuck::from_bytes_mut(&mut d[8..T::DISCRIMINATED_LEN])
+    }))
 }
 
 pub struct InitAccounts<'a> {
@@ -139,34 +149,43 @@ impl<'a> InitAccounts<'a> {
     }
 }
 
-pub fn try_initialize_zc<'a, T>(target_account: &'a AccountInfo, init_accounts: InitAccounts<'a>, signers: Option<&[Signer]>) -> Result<RefMut<'a, T>>
-where 
+pub fn try_initialize_zc<'a, T>(
+    target_account: &'a AccountInfo,
+    init_accounts: InitAccounts<'a>,
+    signers: Option<&[Signer]>,
+) -> Result<RefMut<'a, T>>
+where
     T: Pod + Discriminator + Len + OwnerProgram,
 {
     // if the account already allocated, this will error, guarantees that the account is uninitialized
-    create_account(
-        init_accounts.owner_program_id,
-        target_account,
-        init_accounts.payer_account,
+    let cpi_ctx = CpiCtx::try_new(
+        init_accounts.system_program,
+        CreateAccount {
+            from: init_accounts.payer_account,
+            to: target_account,
+        },
         signers,
-        T::DISCRIMINATED_LEN as u64,
     )?;
+
+    create_account(cpi_ctx, init_accounts.owner_program_id, T::DISCRIMINATED_LEN as u64)?;
 
     let mut data = target_account.try_borrow_mut_data()?;
 
     data[..8].copy_from_slice(T::DISCRIMINATOR);
 
-    Ok(RefMut::map(data, |d| bytemuck::from_bytes_mut(&mut d[8..T::DISCRIMINATED_LEN])))
+    Ok(RefMut::map(data, |d| {
+        bytemuck::from_bytes_mut(&mut d[8..T::DISCRIMINATED_LEN])
+    }))
 }
 
 #[cfg(feature = "std")]
 pub fn try_deserialize_borsh<T>(account_info: &AccountInfo) -> Result<T>
-where 
+where
     T: BorshDeserialize + Discriminator + Len + OwnerProgram,
 {
     if unlikely(&T::OWNER != account_info.owner()) {
         fail_with_ctx!(
-            "JUTSU_SER_BORSH_INVALID_OWNER",
+            "HAYABUSA_SER_BORSH_INVALID_OWNER",
             ProgramError::InvalidAccountOwner,
             account_info.key(),
             &T::OWNER,
@@ -178,31 +197,27 @@ where
 
     if unlikely(data.len() != T::DISCRIMINATED_LEN) {
         fail_with_ctx!(
-            "JUTSU_SER_BORSH_ACCOUNT_DATA_TOO_SHORT",
+            "HAYABUSA_SER_BORSH_ACCOUNT_DATA_TOO_SHORT",
             ProgramError::InvalidAccountData,
             account_info.key(),
         );
     }
 
     let disc_bytes = &data[..8];
-    
+
     if unlikely(disc_bytes != T::DISCRIMINATOR) {
         fail_with_ctx!(
-            "JUTSU_SER_BORSH_INVALID_DISCRIMINATOR",
+            "HAYABUSA_SER_BORSH_INVALID_DISCRIMINATOR",
             ErrorCode::InvalidAccountDiscriminator,
             account_info.key(),
             disc_bytes,
             &T::DISCRIMINATOR,
         );
     }
-    
+
     let content = &data[8..T::DISCRIMINATED_LEN];
-    T::try_from_slice(content)
-        .map_err(|_| {
-            fail_with_ctx_no_return!(
-                "JUTSU_SER_BORSH_DESERIALIZE_FAILED",
-                account_info.key(),
-            );
-            program_error!(ErrorCode::InvalidAccount)
-        })
+    T::try_from_slice(content).map_err(|_| {
+        fail_with_ctx_no_return!("HAYABUSA_SER_BORSH_DESERIALIZE_FAILED", account_info.key(),);
+        program_error!(ErrorCode::InvalidAccount)
+    })
 }

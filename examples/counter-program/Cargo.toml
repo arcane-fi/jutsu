@@ -6,5 +6,5 @@ members = [
 resolver = "2"
 
 [workspace.dependencies]
-jutsu = { path = "../../crates/lib" }
+hayabusa = { path = "../../crates/lib" }
 bytemuck = { version = "1.21.0", features = ["derive"] }

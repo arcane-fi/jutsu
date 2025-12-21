@@ -1,5 +1,5 @@
 [package]
-name = "jutsu-ser"
+name = "hayabusa-ser"
 version.workspace = true
 edition.workspace = true
 license.workspace = true
@@ -13,7 +13,8 @@ std = ["dep:borsh"]
 pinocchio.workspace = true
 borsh = { workspace = true, optional = true }
 bytemuck.workspace = true
-jutsu-discriminator.workspace = true
-jutsu-utility.workspace = true
-jutsu-errors.workspace = true
-jutsu-cpi.workspace = true
+hayabusa-discriminator.workspace = true
+hayabusa-utility.workspace = true
+hayabusa-errors.workspace = true
+hayabusa-cpi.workspace = true
+hayabusa-system-program.workspace = true

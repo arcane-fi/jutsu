@@ -3,34 +3,85 @@
 
 #![no_std]
 
-use pinocchio::{account_info::AccountInfo, instruction::Signer, pubkey::Pubkey, sysvars::{rent::Rent, Sysvar}};
-use pinocchio_system::instructions::CreateAccount;
-use jutsu_errors::Result;
+use hayabusa_errors::Result;
+use hayabusa_utility::fail_with_ctx;
+use pinocchio::{
+    account_info::AccountInfo, hint::unlikely, instruction::Signer, program_error::ProgramError, pubkey::Pubkey
+};
 
-pub fn create_account<'a>(
-    program_id: &'a Pubkey,
-    target_account: &'a AccountInfo,
-    payer: &'a AccountInfo,
-    signers: Option<&[Signer]>,
-    space: u64,
-) -> Result<()> {
-    let rent = Rent::get()?;
+pub trait CheckProgramId {
+    const ID: Pubkey;
 
-    let min_lamports = rent.minimum_balance(space as usize);
+    fn check_program_id(id: &Pubkey) -> Result<()> {
+        if unlikely(id != &Self::ID) {
+            fail_with_ctx!(
+                "HAYABUSA_CPI_PROGRAM_ID_INCORRECT_PROGRAM_ID",
+                ProgramError::IncorrectProgramId,
+                id,
+                &Self::ID,
+            );
+        }
 
-    let create_account = CreateAccount {
-        from: payer,
-        to: target_account,
-        lamports: min_lamports,
-        space,
-        owner: program_id,
-    };
+        Ok(())
+    }
+}
 
-    if let Some(signers) = signers {
-        create_account.invoke_signed(signers)?;
-    } else {
-        create_account.invoke()?;
+pub struct CpiCtx<'a, 'b, 'c, 'd, T: CheckProgramId> {
+    pub program_info: &'a AccountInfo,
+    pub accounts: T,
+    pub signers: Option<&'b [Signer<'c, 'd>]>,
+}
+
+impl<'a, 'b, 'c, 'd, T: CheckProgramId> CpiCtx<'a, 'b, 'c, 'd, T> {
+    #[inline(always)]
+    pub fn try_new(
+        program_info: &'a AccountInfo,
+        accounts: T,
+        signers: Option<&'b [Signer<'c, 'd>]>,
+    ) -> Result<Self> {
+        T::check_program_id(program_info.key())?;
+
+        Ok(Self {
+            program_info,
+            accounts,
+            signers,
+        })
     }
 
-    Ok(())
+    #[inline(always)]
+    pub fn try_new_without_signer(
+        program_info: &'a AccountInfo,
+        accounts: T,
+    ) -> Result<Self> {
+        T::check_program_id(program_info.key())?;
+
+        Ok(Self {
+            program_info,
+            accounts,
+            signers: None,
+        })
+    }
+
+    #[inline(always)]
+    pub fn try_new_with_signer(
+        program_info: &'a AccountInfo,
+        accounts: T,
+        signers: &'b [Signer<'c, 'd>],
+    ) -> Result<Self> {
+        T::check_program_id(program_info.key())?;
+
+        Ok(Self {
+            program_info,
+            accounts,
+            signers: Some(signers),
+        })
+    }
+}
+
+impl<T: CheckProgramId> core::ops::Deref for CpiCtx<'_, '_, '_, '_, T> {
+    type Target = T;
+
+    fn deref(&self) -> &Self::Target {
+        &self.accounts
+    }
 }

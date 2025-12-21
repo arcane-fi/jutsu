@@ -15,7 +15,7 @@ macro_rules! dispatch {
     ) => {{
         if unlikely($program_id != &crate::ID) {
             fail_with_ctx!(
-                "JUTSU_DISPATCH_INCORRECT_PROGRAM_ID",
+                "HAYABUSA_DISPATCH_INCORRECT_PROGRAM_ID",
                 ProgramError::IncorrectProgramId,
                 $program_id,
             );
@@ -25,8 +25,8 @@ macro_rules! dispatch {
 
         if unlikely($ix_data.len() < DISC_LEN) {
             fail_with_ctx!(
-                "JUTSU_DISPATCH_IX_DATA_LEN",
-                ErrorCode::UnknownInstruction,
+                "HAYABUSA_DISPATCH_IX_DATA_LEN",
+                ProgramError::InvalidInstructionData,
                 $ix_data,
             );
         }
@@ -37,17 +37,17 @@ macro_rules! dispatch {
             if disc == <$IxTy>::DISCRIMINATOR {
                 let ix = bytemuck::try_from_bytes::<$IxTy>(rest)
                     .map_err(|_| {
-                        pinocchio::program_error::ProgramError::InvalidInstructionData
+                        ProgramError::InvalidInstructionData
                     })?;
 
-                let ctx = Context::construct($accounts)?;
+                let ctx = Ctx::construct($accounts)?;
                 return $handler(ctx, $(ix.$field),*)
                     .map_err(Into::into);
             }
         )+
 
         fail_with_ctx!(
-            "JUTSU_DISPATCH_UNKNOWN_IX",
+            "HAYABUSA_DISPATCH_UNKNOWN_IX",
             ErrorCode::UnknownInstruction,
             disc,
         );

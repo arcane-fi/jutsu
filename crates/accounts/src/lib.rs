@@ -5,16 +5,11 @@
 
 mod accounts;
 pub use accounts::{
-    mutable::*,
-    program::*,
-    signer::*,
-    system_account::*,
-    unchecked_account::*,
-    zc_account::*,
+    mutable::*, program::*, signer::*, system_account::*, unchecked_account::*, zc_account::*,
 };
 
+use hayabusa_errors::Result;
 use pinocchio::{account_info::AccountInfo, pubkey::Pubkey};
-use jutsu_errors::Result;
 
 pub trait FromAccountInfo<'a>: Sized {
     fn try_from_account_info(account_info: &'a AccountInfo) -> Result<Self>;

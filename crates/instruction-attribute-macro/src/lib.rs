@@ -3,9 +3,7 @@
 
 use proc_macro::TokenStream;
 use quote::{format_ident, quote};
-use syn::{
-    parse_macro_input, FnArg, Ident, ItemFn, Pat, PatIdent, PatType, ReturnType, Type,
-};
+use syn::{parse_macro_input, FnArg, Ident, ItemFn, Pat, PatIdent, PatType, ReturnType, Type};
 
 #[proc_macro_attribute]
 pub fn instruction(_attr: TokenStream, item: TokenStream) -> TokenStream {
@@ -39,7 +37,9 @@ pub fn instruction(_attr: TokenStream, item: TokenStream) -> TokenStream {
                 (ident, ty.as_ref().clone())
             }
             FnArg::Receiver(_) => {
-                return syn::Error::new_spanned(arg, "methods are not supported").to_compile_error().into();
+                return syn::Error::new_spanned(arg, "methods are not supported")
+                    .to_compile_error()
+                    .into();
             }
         };
 

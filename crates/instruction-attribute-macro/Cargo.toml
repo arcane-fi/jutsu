@@ -1,5 +1,5 @@
 [package]
-name = "jutsu-instruction-attribute-macro"
+name = "hayabusa-instruction-attribute-macro"
 version.workspace = true
 edition.workspace = true
 license.workspace = true

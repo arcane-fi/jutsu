@@ -10,38 +10,35 @@ pub mod instruction {
 pub mod prelude {
     pub use super::instruction;
 
-    pub use jutsu_cpi::*;
-    pub use jutsu_discriminator::Discriminator;
-    pub use jutsu_discriminator_derive::Discriminator;
-    pub use jutsu_errors::ErrorCode;
-    pub use jutsu_errors_derive::JutsuError;
-    pub use jutsu_instruction_attribute_macro::instruction;
-    pub use jutsu_instruction_dispatch_macro::dispatch;
-    pub use jutsu_len_derive::Len;
-    pub use jutsu_owner_program_derive::OwnerProgram;
-    pub use jutsu_pda::*;
-    pub use jutsu_accounts::*;
-    pub use jutsu_context::*;
-    pub use jutsu_ser::*;
-    pub use jutsu_ser_derive::ZcDeserialize;
-    pub use jutsu_utility::{*, take_bytes};
-    pub use jutsu_errors::Result;
+    pub use hayabusa_accounts::*;
+    pub use hayabusa_context::*;
+    pub use hayabusa_cpi::*;
+    pub use hayabusa_discriminator::Discriminator;
+    pub use hayabusa_discriminator_derive::Discriminator;
+    pub use hayabusa_errors::{ErrorCode, Result};
+    pub use hayabusa_instruction_attribute_macro::instruction;
+    pub use hayabusa_instruction_dispatch_macro::dispatch;
+    pub use hayabusa_from_account_infos_derive::FromAccountInfos;
+    pub use hayabusa_len_derive::Len;
+    pub use hayabusa_owner_program_derive::OwnerProgram;
+    pub use hayabusa_pda::*;
+    pub use hayabusa_ser::*;
+    pub use hayabusa_ser_derive::ZcDeserialize;
+    pub use hayabusa_utility::{take_bytes, *};
 
     #[cfg(not(feature = "std"))]
     pub use pinocchio::nostd_panic_handler;
     pub use pinocchio::{
         self,
-        ProgramResult,
         account_info::AccountInfo,
-        pubkey::*,
-        program_entrypoint,
         default_allocator,
-        no_allocator,
-        msg,
-        seeds,
         hint::unlikely,
+        msg, no_allocator, program_entrypoint,
         program_error::ProgramError,
+        pubkey::*,
+        seeds,
         sysvars::{clock::Clock, fees::Fees, rent::Rent, Sysvar},
+        ProgramResult,
     };
     pub use pinocchio_pubkey::declare_id;
 }

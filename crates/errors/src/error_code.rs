@@ -36,7 +36,7 @@ impl From<ErrorCode> for ProgramError {
 }
 
 impl ToStr for ErrorCode {
-    fn to_str<E>(&self) -> &'static str 
+    fn to_str<E>(&self) -> &'static str
     where
         E: ToStr + TryFrom<u32> + 'static,
     {

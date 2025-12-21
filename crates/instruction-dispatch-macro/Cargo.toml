@@ -1,5 +1,5 @@
 [package]
-name = "jutsu-instruction-dispatch-macro"
+name = "hayabusa-instruction-dispatch-macro"
 version.workspace = true
 edition.workspace = true
 license.workspace = true

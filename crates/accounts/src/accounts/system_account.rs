@@ -1,12 +1,10 @@
 // Copyright (c) 2025, Arcane Labs <dev@arcane.fi>
 // SPDX-License-Identifier: Apache-2.0
 
-use crate::{FromAccountInfo, ToAccountInfo, Key, WritableAllowed};
-use pinocchio::{
-    account_info::AccountInfo, hint::unlikely, pubkey::Pubkey
-};
-use jutsu_errors::{ErrorCode, Result};
-use jutsu_utility::fail_with_ctx;
+use crate::{FromAccountInfo, Key, ToAccountInfo, WritableAllowed};
+use hayabusa_errors::{ErrorCode, Result};
+use hayabusa_utility::fail_with_ctx;
+use pinocchio::{account_info::AccountInfo, hint::unlikely, pubkey::Pubkey};
 
 pub struct SystemAccount<'a> {
     pub account_info: &'a AccountInfo,
@@ -15,9 +13,9 @@ pub struct SystemAccount<'a> {
 impl<'a> FromAccountInfo<'a> for SystemAccount<'a> {
     #[inline(always)]
     fn try_from_account_info(account_info: &'a AccountInfo) -> Result<Self> {
-        if unlikely(account_info.owner() != &pinocchio_system::ID) {
+        if unlikely(account_info.owner() != &hayabusa_system_program::ID) {
             fail_with_ctx!(
-                "JUTSU_INVALID_SYSTEM_ACCOUNT",
+                "HAYABUSA_INVALID_SYSTEM_ACCOUNT",
                 ErrorCode::InvalidAccount,
                 account_info.key(),
             );

@@ -1,6 +1,6 @@
 #![allow(unused)]
 
-use jutsu::prelude::Discriminator;
+use hayabusa::prelude::Discriminator;
 use litesvm::LiteSVM;
 use solana_sdk::{
     account::Account, instruction::{AccountMeta, Instruction}, pubkey::Pubkey, signature::Keypair, signer::Signer, system_program, transaction::Transaction, pubkey,

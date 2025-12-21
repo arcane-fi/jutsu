@@ -1,12 +1,16 @@
 // Copyright (c) 2025, Arcane Labs <dev@arcane.fi>
 // SPDX-License-Identifier: Apache-2.0
 
-use crate::{FromAccountInfo, ToAccountInfo, Key, WritableAllowed};
-use pinocchio::{account_info::{AccountInfo, Ref, RefMut}, instruction::Signer, pubkey::Pubkey};
-use jutsu_errors::Result;
-use jutsu_ser::{InitAccounts, ZcDeserialize};
+use crate::{FromAccountInfo, Key, ToAccountInfo, WritableAllowed};
+use hayabusa_errors::Result;
+use hayabusa_ser::{InitAccounts, ZcDeserialize};
+use pinocchio::{
+    account_info::{AccountInfo, Ref, RefMut},
+    instruction::Signer,
+    pubkey::Pubkey,
+};
 pub struct ZcAccount<'a, T>
-where 
+where
     T: ZcDeserialize,
 {
     pub account_info: &'a AccountInfo,
@@ -15,9 +19,9 @@ where
 
 #[allow(dead_code)]
 impl<'a, T> ZcAccount<'a, T>
-where 
+where
     T: ZcDeserialize,
-{   
+{
     #[inline(always)]
     pub fn try_deserialize_zc(&self) -> Result<Ref<'a, T>> {
         T::try_deserialize_zc(self.account_info)
@@ -29,13 +33,17 @@ where
     }
 
     #[inline(always)]
-    pub fn try_initialize_zc(&self, init_accounts: InitAccounts<'a>, signers: Option<&[Signer]>) -> Result<RefMut<'a, T>> {
+    pub fn try_initialize_zc(
+        &self,
+        init_accounts: InitAccounts<'a>,
+        signers: Option<&[Signer]>,
+    ) -> Result<RefMut<'a, T>> {
         T::try_initialize_zc(self.account_info, init_accounts, signers)
     }
 }
 
 impl<'a, T> FromAccountInfo<'a> for ZcAccount<'a, T>
-where 
+where
     T: ZcDeserialize,
 {
     #[inline(always)]
@@ -48,7 +56,7 @@ where
 }
 
 impl<'a, T> ToAccountInfo<'a> for ZcAccount<'a, T>
-where 
+where
     T: ZcDeserialize,
 {
     #[inline(always)]
@@ -58,7 +66,7 @@ where
 }
 
 impl<'a, T> Key for ZcAccount<'a, T>
-where 
+where
     T: ZcDeserialize,
 {
     #[inline(always)]
@@ -67,7 +75,4 @@ where
     }
 }
 
-impl<'a, T> WritableAllowed for ZcAccount<'a, T>
-where 
-    T: ZcDeserialize,
-{}
+impl<'a, T> WritableAllowed for ZcAccount<'a, T> where T: ZcDeserialize {}

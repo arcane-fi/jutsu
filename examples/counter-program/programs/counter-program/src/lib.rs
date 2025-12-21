@@ -2,7 +2,7 @@
 #![allow(dead_code, unexpected_cfgs)]
 
 use bytemuck::{Pod, Zeroable};
-use jutsu::prelude::*;
+use hayabusa::prelude::*;
 
 declare_id!("HPoDm7Kf63B6TpFKV7S8YSd7sGde6sVdztiDBEVkfuxz");
 
@@ -30,7 +30,7 @@ mod entrypoint {
 }
 
 #[instruction] // generates UpdateCounterInstruction { amount: u64 } + Discriminator
-fn update_counter<'a>(ctx: Context<'a, UpdateCounter<'a>>, amount: u64) -> Result<()> {
+fn update_counter<'a>(ctx: Ctx<'a, UpdateCounter<'a>>, amount: u64) -> Result<()> {
     let mut counter = ctx.counter.try_deserialize_zc_mut()?;
 
     counter.counter += amount;
@@ -43,7 +43,7 @@ pub struct UpdateCounter<'a> {
     pub counter: Mut<'a, ZcAccount<'a, CounterAccount>>,
 }
 
-// Intentionally kept manual, you get to see the construction proc macro is doing
+// Intentionally kept manual, you get to see the FromAccountInfos proc macro is doing
 impl<'a> FromAccountInfos<'a> for UpdateCounter<'a> {
     #[inline(always)]
     fn try_from_account_infos(account_infos: &mut AccountIter<'a>) -> Result<Self> {
@@ -58,7 +58,7 @@ impl<'a> FromAccountInfos<'a> for UpdateCounter<'a> {
 }
 
 #[instruction]
-fn initialize_counter<'a>(ctx: Context<'a, InitializeCounter<'a>>) -> Result<()> {
+fn initialize_counter<'a>(ctx: Ctx<'a, InitializeCounter<'a>>) -> Result<()> {
     // account is zeroed on init
     let _ = ctx.counter.try_initialize_zc(
         InitAccounts::new(
@@ -72,25 +72,11 @@ fn initialize_counter<'a>(ctx: Context<'a, InitializeCounter<'a>>) -> Result<()>
     Ok(())
 }
 
+#[derive(FromAccountInfos)]
 pub struct InitializeCounter<'a> {
     pub user: Mut<'a, Signer<'a>>,
     pub counter: Mut<'a, ZcAccount<'a, CounterAccount>>,
     pub system_program: Program<'a, System>,
-}
-
-impl<'a> FromAccountInfos<'a> for InitializeCounter<'a> {
-    #[inline(always)]
-    fn try_from_account_infos(account_infos: &mut AccountIter<'a>) -> Result<Self> {
-        let user = Mut::try_from_account_info(account_infos.next()?)?;
-        let counter = Mut::try_from_account_info(account_infos.next()?)?;
-        let system_program = Program::try_from_account_info(account_infos.next()?)?;
-
-        Ok(InitializeCounter {
-            user,
-            counter,
-            system_program,
-        })
-    }
 }
 
 #[derive(Pod, Zeroable, Discriminator, Len, ZcDeserialize, OwnerProgram, Copy, Clone)]

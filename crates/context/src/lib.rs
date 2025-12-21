@@ -3,31 +3,31 @@
 
 #![no_std]
 
+use hayabusa_errors::{ErrorCode, Result};
+use hayabusa_utility::fail_with_ctx;
 use pinocchio::account_info::AccountInfo;
-use jutsu_errors::{Result, ErrorCode};
-use jutsu_utility::fail_with_ctx;
 
 pub trait FromAccountInfos<'a>
-where 
+where
     Self: Sized,
 {
     fn try_from_account_infos(account_infos: &mut AccountIter<'a>) -> Result<Self>;
 }
 
 /// ## Context
-/// 
+///
 /// A context consists of a set of typed/named accounts `T`
 /// with constraints applied and a remaining accounts iterator.
-pub struct Context<'a, T>
-where 
+pub struct Ctx<'a, T>
+where
     T: FromAccountInfos<'a>,
 {
     pub accounts: T,
     pub remaining_accounts: AccountIter<'a>,
 }
 
-impl<'a, T> Context<'a, T>
-where 
+impl<'a, T> Ctx<'a, T>
+where
     T: FromAccountInfos<'a>,
 {
     pub fn construct(account_infos: &'a [AccountInfo]) -> Result<Self> {
@@ -35,15 +35,15 @@ where
 
         let accounts = T::try_from_account_infos(&mut iter)?;
 
-        Ok(Context {
+        Ok(Ctx {
             accounts,
             remaining_accounts: iter,
         })
     }
 }
 
-impl<'a, T> core::ops::Deref for Context<'a, T>
-where 
+impl<'a, T> core::ops::Deref for Ctx<'a, T>
+where
     T: FromAccountInfos<'a>,
 {
     type Target = T;
@@ -62,17 +62,14 @@ pub struct AccountIter<'a> {
 impl<'a> AccountIter<'a> {
     #[inline(always)]
     pub fn new(slice: &'a [AccountInfo]) -> Self {
-        Self {
-            slice,
-            index: 0,
-        }
+        Self { slice, index: 0 }
     }
 
     #[inline(always)]
     pub fn next(&mut self) -> Result<&'a AccountInfo> {
         if self.index >= self.slice.len() {
             fail_with_ctx!(
-                "JUTSU_ACCOUNT_ITER_NEXT_NOT_PRESENT",
+                "HAYABUSA_ACCOUNT_ITER_NEXT_NOT_PRESENT",
                 ErrorCode::InvalidAccount,
             );
         }

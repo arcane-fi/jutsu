@@ -3,8 +3,8 @@
 
 use proc_macro::TokenStream;
 use quote::quote;
+use sha2::{Digest, Sha256};
 use syn::{parse_macro_input, DeriveInput};
-use sha2::{Sha256, Digest};
 
 #[proc_macro_derive(Discriminator)]
 pub fn derive_discriminator(input: TokenStream) -> TokenStream {
@@ -31,15 +31,13 @@ struct DiscriminatorHasher<'a> {
 
 impl<'a> DiscriminatorHasher<'a> {
     pub fn new(identifier: &'a str) -> Self {
-        Self {
-            identifier,
-        }
+        Self { identifier }
     }
 
     pub fn hash_and_extract_discriminator(&self) -> [u8; 8] {
         let mut hasher = Sha256::new();
         hasher.update(self.identifier);
-        
+
         let hash = hasher.finalize();
         let mut discriminator = [0u8; 8];
 

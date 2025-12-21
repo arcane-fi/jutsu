@@ -8,7 +8,6 @@ macro_rules! log {
     };
 }
 
-/// 
 #[macro_export]
 macro_rules! fail {
     ($tag:literal, $code:expr) => {
@@ -19,19 +18,26 @@ macro_rules! fail {
 
 #[macro_export]
 macro_rules! fail_with_ctx {
-    ($tag:literal, $code:expr, $($arg:expr),* $(,)?) => {
+    ($tag:literal, $code:expr, $($arg:expr),+ $(,)?) => {
         $crate::log!(concat!("ERROR:", $tag));
-        $crate::dump_raw!($($arg),*);
+        $crate::dump_raw!($($arg),+);
         $crate::error!($code);
     };
+    ($tag:literal, $code:expr $(,)?) => {
+        $crate::log!(concat!("ERROR:", $tag));
+        $crate::error!($code);
+    }
 }
 
 #[macro_export]
 macro_rules! fail_with_ctx_no_return {
-    ($tag:literal, $($arg:expr),* $(,)?) => {
+    ($tag:literal, $($arg:expr),+ $(,)?) => {
         $crate::log!(concat!("ERROR:", $tag));
-        $crate::dump_raw!($($arg),*);
+        $crate::dump_raw!($($arg),+);
     };
+    ($tag:literal $(,)?) => {
+        $crate::log!(concat!("ERROR:", $tag));
+    }
 }
 
 #[macro_export]
@@ -54,7 +60,7 @@ macro_rules! dump {
         pinocchio::log::sol_log_data(
             &[$(bytemuck::bytes_of(&$arg)),*]
         );
-    };  
+    };
 }
 
 #[macro_export]

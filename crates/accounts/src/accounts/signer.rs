@@ -1,10 +1,10 @@
 // Copyright (c) 2025, Arcane Labs <dev@arcane.fi>
 // SPDX-License-Identifier: Apache-2.0
 
-use crate::{FromAccountInfo, ToAccountInfo, Key, WritableAllowed};
+use crate::{FromAccountInfo, Key, ToAccountInfo, WritableAllowed};
+use hayabusa_errors::{ErrorCode, Result};
+use hayabusa_utility::fail_with_ctx;
 use pinocchio::{account_info::AccountInfo, hint::unlikely, pubkey::Pubkey};
-use jutsu_errors::{ErrorCode, Result};
-use jutsu_utility::fail_with_ctx;
 
 pub struct Signer<'a> {
     pub account_info: &'a AccountInfo,
@@ -15,7 +15,7 @@ impl<'a> FromAccountInfo<'a> for Signer<'a> {
     fn try_from_account_info(account_info: &'a AccountInfo) -> Result<Self> {
         if unlikely(!account_info.is_signer()) {
             fail_with_ctx!(
-                "JUTSU_SIGNER_ACCOUNT_NOT_SIGNER",
+                "HAYABUSA_SIGNER_ACCOUNT_NOT_SIGNER",
                 ErrorCode::AccountNotSigner,
                 account_info.key(),
             );

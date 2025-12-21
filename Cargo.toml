@@ -8,7 +8,7 @@ version = "0.1.0"
 edition = "2021"
 license = "Apache-2.0"
 authors = ["Levi Bland <levi@arcane.fi>"]
-repository = "https://github.com/arcane-fi/jutsu"
+repository = "https://github.com/arcane-fi/hayabusa"
 rust-version = "1.82"
 
 [workspace.dependencies]
@@ -16,25 +16,24 @@ borsh = { version = "1.5", features = ["derive"] }
 bytemuck = "1.21.0"
 pinocchio = "0.9.2"
 pinocchio-pubkey = "0.3"
-pinocchio-system = "0.3"
 sha2 = "0.10"
 quote = "1.0"
 proc-macro2 = "1.0"
 syn = "2.0"
-jutsu = { path = "crates/lib" }
-jutsu-accounts = { path = "crates/accounts" }
-jutsu-discriminator = { path = "crates/discriminator" }
-jutsu-discriminator-derive = { path = "crates/discriminator-derive" }
-jutsu-syn = { path = "crates/syn" }
-jutsu-errors = { path = "crates/errors" }
-jutsu-errors-derive = { path = "crates/errors-derive" }
-jutsu-pda = { path = "crates/pda" }
-jutsu-utility = { path = "crates/utility" }
-jutsu-context = { path = "crates/context" }
-jutsu-ser = { path = "crates/ser" }
-jutsu-instruction-attribute-macro = { path = "crates/instruction-attribute-macro" }
-jutsu-instruction-dispatch-macro = { path = "crates/instruction-dispatch-macro" }
-jutsu-len-derive = { path = "crates/len-derive" }
-jutsu-owner-program-derive = { path = "crates/owner-program-derive" }
-jutsu-ser-derive = { path = "crates/ser-derive" }
-jutsu-cpi = { path = "crates/cpi" }
+hayabusa = { path = "crates/lib" }
+hayabusa-accounts = { path = "crates/accounts" }
+hayabusa-discriminator = { path = "crates/discriminator" }
+hayabusa-discriminator-derive = { path = "crates/discriminator-derive" }
+hayabusa-errors = { path = "crates/errors" }
+hayabusa-pda = { path = "crates/pda" }
+hayabusa-utility = { path = "crates/utility" }
+hayabusa-context = { path = "crates/context" }
+hayabusa-ser = { path = "crates/ser" }
+hayabusa-instruction-attribute-macro = { path = "crates/instruction-attribute-macro" }
+hayabusa-instruction-dispatch-macro = { path = "crates/instruction-dispatch-macro" }
+hayabusa-len-derive = { path = "crates/len-derive" }
+hayabusa-owner-program-derive = { path = "crates/owner-program-derive" }
+hayabusa-ser-derive = { path = "crates/ser-derive" }
+hayabusa-cpi = { path = "crates/cpi" }
+hayabusa-from-account-infos-derive = { path = "crates/from-account-infos-derive" }
+hayabusa-system-program = { path = "crates/system-program" }

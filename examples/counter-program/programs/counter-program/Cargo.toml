@@ -9,8 +9,11 @@ crate-type = ["cdylib", "lib"]
 
 [dependencies]
 bytemuck.workspace = true
-jutsu.workspace = true
+hayabusa.workspace = true
 
 [profile.release]
 lto = true
+opt-level = "z"
 codegen-units = 1
+overflow-checks = true
+panic = "abort"

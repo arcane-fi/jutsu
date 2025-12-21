@@ -1,9 +1,9 @@
 // Copyright (c) 2025, Arcane Labs <dev@arcane.fi>
 // SPDX-License-Identifier: Apache-2.0
 
-use crate::{FromAccountInfo, ToAccountInfo, Key, WritableAllowed};
+use crate::{FromAccountInfo, Key, ToAccountInfo, WritableAllowed};
+use hayabusa_errors::Result;
 use pinocchio::{account_info::AccountInfo, pubkey::Pubkey};
-use jutsu_errors::Result;
 
 pub struct UncheckedAccount<'a> {
     pub account_info: &'a AccountInfo,

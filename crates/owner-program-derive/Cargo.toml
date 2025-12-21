@@ -1,5 +1,5 @@
 [package]
-name = "jutsu-owner-program-derive"
+name = "hayabusa-owner-program-derive"
 version.workspace = true
 edition.workspace = true
 license.workspace = true

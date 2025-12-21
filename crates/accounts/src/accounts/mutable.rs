@@ -2,12 +2,12 @@
 // SPDX-License-Identifier: Apache-2.0
 
 use crate::{FromAccountInfo, Key, ToAccountInfo, WritableAllowed};
+use hayabusa_errors::{ErrorCode, Result};
+use hayabusa_utility::fail_with_ctx;
 use pinocchio::{account_info::AccountInfo, hint::unlikely, pubkey::Pubkey};
-use jutsu_errors::{ErrorCode, Result};
-use jutsu_utility::fail_with_ctx;
 
 pub struct Mut<'a, T>
-where 
+where
     T: FromAccountInfo<'a> + ToAccountInfo<'a> + Key + WritableAllowed,
 {
     pub account: T,
@@ -15,14 +15,14 @@ where
 }
 
 impl<'a, T> FromAccountInfo<'a> for Mut<'a, T>
-where 
+where
     T: FromAccountInfo<'a> + ToAccountInfo<'a> + Key + WritableAllowed,
 {
     #[inline(always)]
     fn try_from_account_info(account_info: &'a AccountInfo) -> Result<Self> {
         if unlikely(!account_info.is_writable()) {
             fail_with_ctx!(
-                "JUTSU_ACCOUNT_NOT_WRITABLE",
+                "HAYABUSA_ACCOUNT_NOT_WRITABLE",
                 ErrorCode::AccountNotWritable,
                 account_info.key(),
             );
@@ -36,7 +36,7 @@ where
 }
 
 impl<'a, T> ToAccountInfo<'a> for Mut<'a, T>
-where 
+where
     T: FromAccountInfo<'a> + ToAccountInfo<'a> + Key + WritableAllowed,
 {
     #[inline(always)]
@@ -46,7 +46,7 @@ where
 }
 
 impl<'a, T> Key for Mut<'a, T>
-where 
+where
     T: FromAccountInfo<'a> + ToAccountInfo<'a> + Key + WritableAllowed,
 {
     #[inline(always)]
@@ -56,7 +56,7 @@ where
 }
 
 impl<'a, T> core::ops::Deref for Mut<'a, T>
-where 
+where
     T: FromAccountInfo<'a> + ToAccountInfo<'a> + Key + WritableAllowed,
 {
     type Target = T;
