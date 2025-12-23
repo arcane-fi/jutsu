@@ -315,6 +315,15 @@ dependencies = [
 ]
 
 [[package]]
+name = "hayabusa-errors-derive"
+version = "0.1.0"
+dependencies = [
+ "proc-macro2",
+ "quote",
+ "syn",
+]
+
+[[package]]
 name = "hayabusa-from-account-infos-derive"
 version = "0.1.0"
 dependencies = [
