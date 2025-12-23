@@ -31,7 +31,7 @@ pub mod prelude {
     pub use pinocchio::nostd_panic_handler;
     pub use pinocchio::{
         self,
-        account_info::AccountInfo,
+        account_info::{AccountInfo, Ref, RefMut},
         default_allocator,
         hint::unlikely,
         msg, no_allocator, program_entrypoint,
