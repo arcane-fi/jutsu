@@ -16,9 +16,10 @@ pub trait CheckSeeds {
     fn check_pda_seeds(
         &self,
         pk: &Pubkey,
-        pda_info: Option<Self::Info<'_>>,
+        pda_info: Self::Info<'_>,
     ) -> Result<(), ProgramError>;
-    fn check_pda_seeds_init(&self, pda_info: Self::InitInfo<'_>) -> Result<(), ProgramError>;
+
+    fn check_pda_seeds_init(pk: &Pubkey, pda_info: Self::InitInfo<'_>) -> Result<(), ProgramError>;
 }
 
 pub fn check_seeds_against_pk(
