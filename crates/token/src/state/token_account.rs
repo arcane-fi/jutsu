@@ -52,16 +52,7 @@ pub struct TokenAccount {
     close_authority: Pubkey,
 }
 
-/// Return a `TokenAccount` from the given bytes.
-///
-/// # Safety
-///
-/// The caller must ensure that `bytes` contains a valid representation of `TokenAccount`, and
-/// it is properly aligned to be interpreted as an instance of `TokenAccount`.
-/// At the moment `TokenAccount` has an alignment of 1 byte.
-/// This method does not perform a length validation.
 impl FromBytesUnchecked for TokenAccount {}
-
 impl Zc for TokenAccount {}
 impl Deserialize for TokenAccount {}
 
