@@ -18,6 +18,7 @@ pinocchio-pubkey.workspace = true
 hayabusa-cpi.workspace = true
 hayabusa-discriminator.workspace = true
 hayabusa-discriminator-derive.workspace = true
+hayabusa-decode-instruction.workspace = true
 hayabusa-errors.workspace = true
 hayabusa-errors-attribute-macro.workspace = true
 hayabusa-pda.workspace = true

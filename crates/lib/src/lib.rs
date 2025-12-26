@@ -20,6 +20,7 @@ pub mod prelude {
     pub use hayabusa_cpi::*;
     pub use hayabusa_discriminator::Discriminator;
     pub use hayabusa_discriminator_derive::Discriminator;
+    pub use hayabusa_decode_instruction::*;
     pub use hayabusa_errors::{ErrorCode, Result};
     pub use hayabusa_errors_attribute_macro::error;
     pub use hayabusa_from_account_infos_derive::FromAccountInfos;

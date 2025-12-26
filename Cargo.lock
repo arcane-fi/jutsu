@@ -229,6 +229,7 @@ dependencies = [
  "hayabusa-accounts",
  "hayabusa-context",
  "hayabusa-cpi",
+ "hayabusa-decode-instruction",
  "hayabusa-discriminator",
  "hayabusa-discriminator-derive",
  "hayabusa-errors",
@@ -293,6 +294,15 @@ dependencies = [
  "hayabusa-utility",
  "pinocchio",
  "pinocchio-pubkey",
+]
+
+[[package]]
+name = "hayabusa-decode-instruction"
+version = "0.1.0"
+dependencies = [
+ "bytemuck",
+ "hayabusa-errors",
+ "pinocchio",
 ]
 
 [[package]]

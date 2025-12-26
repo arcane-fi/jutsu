@@ -34,18 +34,18 @@ macro_rules! dispatch {
 
         let (disc, rest) = $ix_data.split_at(DISC_LEN);
 
-        $(
-            if disc == <$IxTy>::DISCRIMINATOR {
-                let ix = bytemuck::try_from_bytes::<$IxTy>(rest)
-                    .map_err(|_| {
-                        ProgramError::InvalidInstructionData
-                    })?;
+        match disc {
+            $(
+                <$IxTy>::DISCRIMINATOR => {
+                    let ix = <$IxTy as DecodeIx>::decode(rest)
+                        .map_err(|_| ProgramError::InvalidInstructionData)?;
 
-                let ctx = Ctx::construct($accounts)?;
-                return $handler(ctx, $(ix.$field),*)
-                    .map_err(Into::into);
-            }
-        )+
+                    let ctx = Ctx::construct($accounts)?;
+                    return $handler(ctx, $(ix.$field),*)
+                        .map_err(Into::into);
+                }
+            )+
+        }
 
         fail_with_ctx!(
             "HAYABUSA_DISPATCH_UNKNOWN_IX",
