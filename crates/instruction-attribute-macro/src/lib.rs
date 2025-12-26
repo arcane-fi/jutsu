@@ -222,7 +222,7 @@ fn expand_enum_tail(
         impl<'a> DecodeIx<'a> for #struct_ident<'a> {
             type Target = Self;
 
-            fn decode(bytes: &'a [u8]) -> Result<Self::Target, ProgramError> {
+            fn decode(bytes: &'a [u8]) -> Result<Self::Target> {
                 let (first, tail) = bytes
                     .split_first()
                     .ok_or(ProgramError::InvalidInstructionData)?;
