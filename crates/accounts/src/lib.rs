@@ -23,8 +23,11 @@ pub trait ToAccountInfo<'a> {
     fn to_account_info(&self) -> &'a AccountInfo;
 }
 
-pub trait AccountInitializer<'a> {
-    fn initialize_account(&self, account_data: &[u8]) -> Result<()>;
+pub trait AccountInitializer<'a, 'b>
+where
+    'a: 'b,
+{
+    fn initialize_account(&self, account_data: &'b mut [u8]) -> Result<()>;
 }
 
 pub trait WritableAllowed {}

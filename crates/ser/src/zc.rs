@@ -72,9 +72,9 @@ pub trait ZcInitialize
 where
     Self: Pod + Discriminator + Len + OwnerProgram,
 {
-    fn try_initialize_zc<'a>(
+    fn try_initialize<'a>(
         target_account: &'a AccountInfo,
-        init_accounts: InitAccounts<'a>,
+        init_accounts: InitAccounts<'a, '_>,
         signers: Option<&[Signer]>,
     ) -> Result<RefMut<'a, Self>> {
         try_initialize_zc::<Self>(target_account, init_accounts, signers)
@@ -165,16 +165,22 @@ where
     }))
 }
 
-pub struct InitAccounts<'a> {
-    pub owner_program_id: &'a Pubkey,
+pub struct InitAccounts<'a, 'b>
+where
+    'a: 'b,
+{
+    pub owner_program_id: &'b Pubkey,
     pub payer_account: &'a AccountInfo,
     pub system_program: &'a AccountInfo,
 }
 
-impl<'a> InitAccounts<'a> {
+impl<'a, 'b> InitAccounts<'a, 'b>
+where 
+    'a: 'b,
+{
     #[inline(always)]
     pub fn new(
-        owner_program_id: &'a Pubkey,
+        owner_program_id: &'b Pubkey,
         payer_account: &'a AccountInfo,
         system_program: &'a AccountInfo,
     ) -> Self {
@@ -189,7 +195,7 @@ impl<'a> InitAccounts<'a> {
 #[inline(always)]
 pub fn try_initialize_zc<'a, T>(
     target_account: &'a AccountInfo,
-    init_accounts: InitAccounts<'a>,
+    init_accounts: InitAccounts<'a, '_>,
     signers: Option<&[Signer]>,
 ) -> Result<RefMut<'a, T>>
 where

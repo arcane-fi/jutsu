@@ -51,10 +51,10 @@ where
     #[inline(always)]
     pub fn try_initialize(
         &self,
-        init_accounts: InitAccounts<'a>,
+        init_accounts: InitAccounts<'a, '_>,
         signers: Option<&[Signer]>,
     ) -> Result<RefMut<'a, T>> {
-        T::try_initialize_zc(self.account_info, init_accounts, signers)
+        T::try_initialize(self.account_info, init_accounts, signers)
     }
 }
 

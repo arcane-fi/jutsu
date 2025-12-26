@@ -4,7 +4,7 @@
 #![no_std]
 
 pub mod instruction {
-    pub use pinocchio::instruction::{AccountMeta, Instruction, Seed, Signer};
+    pub use pinocchio::instruction::{AccountMeta, Instruction, Seed, Signer as PdaSigner};
 }
 
 pub mod system_program {
