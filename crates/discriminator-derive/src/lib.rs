@@ -9,7 +9,9 @@ use syn::{parse_macro_input, DeriveInput};
 #[proc_macro_derive(Discriminator)]
 pub fn derive_discriminator(input: TokenStream) -> TokenStream {
     let input = parse_macro_input!(input as DeriveInput);
-    let name = input.ident;
+    let name = &input.ident;
+
+    let (impl_generics, ty_generics, where_clause) = input.generics.split_for_impl();
 
     // Generate the discriminator using the hasher
     let name_str = name.to_string();
@@ -17,7 +19,7 @@ pub fn derive_discriminator(input: TokenStream) -> TokenStream {
     let discriminator = hasher.hash_and_extract_discriminator();
 
     let expanded = quote! {
-        impl Discriminator for #name {
+        impl #impl_generics Discriminator for #name #ty_generics #where_clause {
             const DISCRIMINATOR: &'static [u8] = &[#(#discriminator),*];
         }
     };
