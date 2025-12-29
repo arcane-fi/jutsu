@@ -7,20 +7,20 @@ use hayabusa_errors::Result;
 use pinocchio::program_error::ProgramError;
 use bytemuck::Pod;
 
-pub trait DecodeIx {
-    type Target<'a>;
+pub trait DecodeIx<'ix> {
+    type Target;
 
-    fn decode(bytes: &[u8]) -> Result<Self::Target<'_>>;
+    fn decode(bytes: &'ix [u8]) -> Result<Self::Target>;
 }
 
-impl<T> DecodeIx for T
+impl<'ix, T> DecodeIx<'ix> for T
 where 
     T: Pod,
 {
-    type Target<'a> = &'a T;
+    type Target = &'ix T;
 
     #[inline(always)]
-    fn decode(bytes: &[u8]) -> Result<Self::Target<'_>> {
+    fn decode(bytes: &'ix [u8]) -> Result<Self::Target> {
         bytemuck::try_from_bytes::<T>(bytes)
             .map_err(|_| ProgramError::InvalidInstructionData)
     }
