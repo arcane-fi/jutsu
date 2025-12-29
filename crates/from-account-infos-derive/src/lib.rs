@@ -1,6 +1,3 @@
-// Copyright (c) 2025, Arcane Labs <dev@arcane.fi>
-// SPDX-License-Identifier: Apache-2.0
-
 use proc_macro::TokenStream;
 use quote::quote;
 use syn::{parse_macro_input, spanned::Spanned, Data, DeriveInput, Fields, Type, TypePath};
@@ -10,8 +7,35 @@ pub fn derive_from_account_infos(input: TokenStream) -> TokenStream {
     let input = parse_macro_input!(input as DeriveInput);
 
     let struct_name = &input.ident;
-
     let (impl_generics, ty_generics, where_clause) = input.generics.split_for_impl();
+
+    let lifetimes: Vec<syn::Lifetime> = input
+        .generics
+        .lifetimes()
+        .map(|lt_def| lt_def.lifetime.clone())
+        .collect();
+
+    let info_lt = match lifetimes.as_slice() {
+        [] => {
+            return syn::Error::new(
+                input.span(),
+                "FromAccountInfos can only be derived for structs with a lifetime parameter \
+                 (e.g. `struct Foo<'ix> { ... }`).",
+            )
+            .to_compile_error()
+            .into();
+        }
+        [lt] => lt,
+        _ => {
+            return syn::Error::new(
+                input.span(),
+                "FromAccountInfos derive currently supports structs with exactly one lifetime \
+                 parameter.",
+            )
+            .to_compile_error()
+            .into();
+        }
+    };
 
     let fields = match &input.data {
         Data::Struct(s) => match &s.fields {
@@ -60,9 +84,9 @@ pub fn derive_from_account_infos(input: TokenStream) -> TokenStream {
     // Use struct literal like:
     // Ok(StructName { a, b, c })
     let expanded = quote! {
-        impl #impl_generics FromAccountInfos<'a> for #struct_name #ty_generics #where_clause {
+        impl #impl_generics FromAccountInfos<#info_lt> for #struct_name #ty_generics #where_clause {
             #[inline(always)]
-            fn try_from_account_infos(account_infos: &mut AccountIter<'a>) -> Result<Self> {
+            fn try_from_account_infos(account_infos: &mut AccountIter<#info_lt>) -> Result<Self> {
                 #(#let_bindings)*
 
                 Ok(#struct_name {
