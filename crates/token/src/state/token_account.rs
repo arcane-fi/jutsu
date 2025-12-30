@@ -58,9 +58,9 @@ impl Deserialize for TokenAccount {}
 
 unsafe impl RawZcDeserialize for TokenAccount {
     #[inline]
-    fn try_deserialize_raw<'a>(
-        account_info: &'a AccountInfo,
-    ) -> Result<Ref<'a, Self>, ProgramError> {
+    fn try_deserialize_raw<'ix>(
+        account_info: &'ix AccountInfo,
+    ) -> Result<Ref<'ix, Self>, ProgramError> {
         if unlikely(account_info.data_len() != Self::LEN) {
             fail_with_ctx!(
                 "HAYABUSA_SER_TOKEN_ACCOUNT_DATA_TOO_SHORT",

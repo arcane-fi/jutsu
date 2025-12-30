@@ -29,9 +29,9 @@ impl Zc for Multisig {}
 impl Deserialize for Multisig {}
 
 unsafe impl RawZcDeserialize for Multisig {
-    fn try_deserialize_raw<'a>(
-        account_info: &'a AccountInfo,
-    ) -> hayabusa_errors::Result<Ref<'a, Self>> {
+    fn try_deserialize_raw<'ix>(
+        account_info: &'ix AccountInfo,
+    ) -> hayabusa_errors::Result<Ref<'ix, Self>> {
         if unlikely(account_info.data_len() != Self::LEN) {
             fail_with_ctx!(
                 "HAYABUSA_SER_MULTISIG_ACCOUNT_DATA_TOO_SHORT",

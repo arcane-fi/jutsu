@@ -10,11 +10,11 @@ use pinocchio::{
     pubkey::Pubkey,
 };
 
-pub struct Transfer<'a> {
+pub struct Transfer<'ix> {
     /// Funding account
-    pub from: &'a AccountInfo,
+    pub from: &'ix AccountInfo,
     /// Recipient account
-    pub to: &'a AccountInfo,
+    pub to: &'ix AccountInfo,
 }
 
 impl CheckProgramId for Transfer<'_> {
@@ -22,7 +22,7 @@ impl CheckProgramId for Transfer<'_> {
 }
 
 #[inline]
-pub fn transfer<'a>(cpi_ctx: CpiCtx<'a, '_, '_, '_, Transfer<'a>>, lamports: u64) -> Result<()> {
+pub fn transfer<'ix>(cpi_ctx: CpiCtx<'ix, '_, '_, '_, Transfer<'ix>>, lamports: u64) -> Result<()> {
     let infos = [cpi_ctx.from, cpi_ctx.to];
     let metas = [
         AccountMeta::writable_signer(cpi_ctx.from.key()),

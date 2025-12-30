@@ -6,20 +6,20 @@ use hayabusa_errors::{ErrorCode, Result};
 use hayabusa_utility::fail_with_ctx;
 use pinocchio::{account_info::AccountInfo, hint::unlikely, pubkey::Pubkey};
 
-pub struct Mut<'a, T>
+pub struct Mut<'ix, T>
 where
-    T: FromAccountInfo<'a> + ToAccountInfo<'a> + Key + WritableAllowed,
+    T: FromAccountInfo<'ix> + ToAccountInfo<'ix> + Key + WritableAllowed,
 {
     pub account: T,
-    _phantom: core::marker::PhantomData<&'a AccountInfo>,
+    _phantom: core::marker::PhantomData<&'ix AccountInfo>,
 }
 
-impl<'a, T> FromAccountInfo<'a> for Mut<'a, T>
+impl<'ix, T> FromAccountInfo<'ix> for Mut<'ix, T>
 where
-    T: FromAccountInfo<'a> + ToAccountInfo<'a> + Key + WritableAllowed,
+    T: FromAccountInfo<'ix> + ToAccountInfo<'ix> + Key + WritableAllowed,
 {
     #[inline(always)]
-    fn try_from_account_info(account_info: &'a AccountInfo) -> Result<Self> {
+    fn try_from_account_info(account_info: &'ix AccountInfo) -> Result<Self> {
         if unlikely(!account_info.is_writable()) {
             fail_with_ctx!(
                 "HAYABUSA_ACCOUNT_NOT_WRITABLE",
@@ -35,19 +35,19 @@ where
     }
 }
 
-impl<'a, T> ToAccountInfo<'a> for Mut<'a, T>
+impl<'ix, T> ToAccountInfo<'ix> for Mut<'ix, T>
 where
-    T: FromAccountInfo<'a> + ToAccountInfo<'a> + Key + WritableAllowed,
+    T: FromAccountInfo<'ix> + ToAccountInfo<'ix> + Key + WritableAllowed,
 {
     #[inline(always)]
-    fn to_account_info(&self) -> &'a AccountInfo {
+    fn to_account_info(&self) -> &'ix AccountInfo {
         self.account.to_account_info()
     }
 }
 
-impl<'a, T> Key for Mut<'a, T>
+impl<'ix, T> Key for Mut<'ix, T>
 where
-    T: FromAccountInfo<'a> + ToAccountInfo<'a> + Key + WritableAllowed,
+    T: FromAccountInfo<'ix> + ToAccountInfo<'ix> + Key + WritableAllowed,
 {
     #[inline(always)]
     fn key(&self) -> &Pubkey {
@@ -55,9 +55,9 @@ where
     }
 }
 
-impl<'a, T> core::ops::Deref for Mut<'a, T>
+impl<'ix, T> core::ops::Deref for Mut<'ix, T>
 where
-    T: FromAccountInfo<'a> + ToAccountInfo<'a> + Key + WritableAllowed,
+    T: FromAccountInfo<'ix> + ToAccountInfo<'ix> + Key + WritableAllowed,
 {
     type Target = T;
 

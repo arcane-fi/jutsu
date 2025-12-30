@@ -12,11 +12,11 @@ use pinocchio::{
     pubkey::Pubkey,
 };
 
-pub struct InitializeAccount3<'a> {
+pub struct InitializeAccount3<'ix> {
     /// New account
-    pub account: &'a AccountInfo,
+    pub account: &'ix AccountInfo,
     /// Mint account
-    pub mint: &'a AccountInfo,
+    pub mint: &'ix AccountInfo,
 }
 
 impl CheckProgramId for InitializeAccount3<'_> {
@@ -25,8 +25,8 @@ impl CheckProgramId for InitializeAccount3<'_> {
 
 const DISCRIMINATOR: [u8; 1] = [18];
 
-pub fn initialize_account3<'a>(
-    cpi_ctx: CpiCtx<'a, '_, '_, '_, InitializeAccount3<'a>>,
+pub fn initialize_account3<'ix>(
+    cpi_ctx: CpiCtx<'ix, '_, '_, '_, InitializeAccount3<'ix>>,
     owner_pk: &Pubkey,
 ) -> Result<()> {
     let infos = [cpi_ctx.account, cpi_ctx.mint];

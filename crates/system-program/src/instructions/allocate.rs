@@ -10,9 +10,9 @@ use pinocchio::{
     pubkey::Pubkey,
 };
 
-pub struct Allocate<'a> {
+pub struct Allocate<'ix> {
     /// Account to be allocated
-    pub account: &'a AccountInfo,
+    pub account: &'ix AccountInfo,
 }
 
 impl CheckProgramId for Allocate<'_> {
@@ -20,7 +20,7 @@ impl CheckProgramId for Allocate<'_> {
 }
 
 #[inline(always)]
-pub fn allocate<'a>(cpi_ctx: CpiCtx<'a, '_, '_, '_, Allocate<'a>>, space: u64) -> Result<()> {
+pub fn allocate<'ix>(cpi_ctx: CpiCtx<'ix, '_, '_, '_, Allocate<'ix>>, space: u64) -> Result<()> {
     let infos = [cpi_ctx.account];
     let metas = [AccountMeta::writable_signer(cpi_ctx.account.key())];
 

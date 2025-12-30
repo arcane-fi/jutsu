@@ -46,7 +46,7 @@ impl Deserialize for Mint {}
 /// Account data length is validated, and the Mint struct is properly aligned
 /// so it is safe to cast from raw ptr.
 unsafe impl RawZcDeserialize for Mint {
-    fn try_deserialize_raw<'a>(account_info: &'a AccountInfo) -> Result<Ref<'a, Self>> {
+    fn try_deserialize_raw<'ix>(account_info: &'ix AccountInfo) -> Result<Ref<'ix, Self>> {
         if unlikely(account_info.data_len() != Self::LEN) {
             fail_with_ctx!(
                 "HAYABUSA_SER_MINT_DATA_TOO_SHORT",

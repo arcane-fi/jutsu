@@ -12,13 +12,13 @@ use pinocchio::{
     pubkey::Pubkey,
 };
 
-pub struct Transfer<'a> {
+pub struct Transfer<'ix> {
     /// Funding account
-    pub from: &'a AccountInfo,
+    pub from: &'ix AccountInfo,
     /// Recipient account
-    pub to: &'a AccountInfo,
+    pub to: &'ix AccountInfo,
     /// Authority account
-    pub authority: &'a AccountInfo,
+    pub authority: &'ix AccountInfo,
 }
 
 impl CheckProgramId for Transfer<'_> {
@@ -28,7 +28,7 @@ impl CheckProgramId for Transfer<'_> {
 const DISCRIMINATOR: [u8; 1] = [3];
 
 #[inline(always)]
-pub fn transfer<'a>(cpi_ctx: CpiCtx<'a, '_, '_, '_, Transfer<'a>>, amount: u64) -> Result<()> {
+pub fn transfer<'ix>(cpi_ctx: CpiCtx<'ix, '_, '_, '_, Transfer<'ix>>, amount: u64) -> Result<()> {
     let infos = [cpi_ctx.from, cpi_ctx.to, cpi_ctx.authority];
 
     let metas = [

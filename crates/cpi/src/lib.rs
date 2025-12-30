@@ -28,16 +28,16 @@ pub trait CheckProgramId {
     }
 }
 
-pub struct CpiCtx<'a, 'b, 'c, 'd, T: CheckProgramId> {
-    pub program_info: &'a AccountInfo,
+pub struct CpiCtx<'ix, 'b, 'c, 'd, T: CheckProgramId> {
+    pub program_info: &'ix AccountInfo,
     pub accounts: T,
     pub signers: Option<&'b [Signer<'c, 'd>]>,
 }
 
-impl<'a, 'b, 'c, 'd, T: CheckProgramId> CpiCtx<'a, 'b, 'c, 'd, T> {
+impl<'ix, 'b, 'c, 'd, T: CheckProgramId> CpiCtx<'ix, 'b, 'c, 'd, T> {
     #[inline(always)]
     pub fn try_new(
-        program_info: &'a AccountInfo,
+        program_info: &'ix AccountInfo,
         accounts: T,
         signers: Option<&'b [Signer<'c, 'd>]>,
     ) -> Result<Self> {
@@ -51,7 +51,7 @@ impl<'a, 'b, 'c, 'd, T: CheckProgramId> CpiCtx<'a, 'b, 'c, 'd, T> {
     }
 
     #[inline(always)]
-    pub fn try_new_without_signer(program_info: &'a AccountInfo, accounts: T) -> Result<Self> {
+    pub fn try_new_without_signer(program_info: &'ix AccountInfo, accounts: T) -> Result<Self> {
         T::check_program_id(program_info.key())?;
 
         Ok(Self {
@@ -63,7 +63,7 @@ impl<'a, 'b, 'c, 'd, T: CheckProgramId> CpiCtx<'a, 'b, 'c, 'd, T> {
 
     #[inline(always)]
     pub fn try_new_with_signer(
-        program_info: &'a AccountInfo,
+        program_info: &'ix AccountInfo,
         accounts: T,
         signers: &'b [Signer<'c, 'd>],
     ) -> Result<Self> {

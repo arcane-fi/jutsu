@@ -21,30 +21,38 @@ use pinocchio::{
 };
 
 /// # Safety
-/// You must ensure proper alignment of Self, prefer 0x1
+/// You must ensure proper alignment of Self
 pub unsafe trait RawZcDeserialize: Sized + FromBytesUnchecked + Zc + Deserialize {
-    fn try_deserialize_raw<'a>(account_info: &'a AccountInfo) -> Result<Ref<'a, Self>>;
+    fn try_deserialize_raw<'ix>(account_info: &'ix AccountInfo) -> Result<Ref<'ix, Self>>;
+
+    unsafe fn deserialize_raw_unchecked(account_info: &AccountInfo) -> &Self {
+        Self::from_bytes_unchecked(account_info.borrow_data_unchecked())
+    }
 }
 
 /// # Safety
-/// You must ensure proper alignment of Self, prefer 0x1
+/// You must ensure proper alignment of Self
 pub unsafe trait RawZcDeserializeMut
 where
     Self: Sized + FromBytesUnchecked + Zc + Deserialize + DeserializeMut,
 {
-    fn try_deserialize_raw_mut<'a>(account_info: &'a AccountInfo) -> Result<RefMut<'a, Self>>;
+    fn try_deserialize_raw_mut<'ix>(account_info: &'ix AccountInfo) -> Result<RefMut<'ix, Self>>;
+
+    unsafe fn deserialize_raw_mut_unchecked(account_info: &AccountInfo) -> &mut Self {
+        Self::from_bytes_unchecked_mut(account_info.borrow_mut_data_unchecked())
+    }
 }
 
 /// Unsafe to call either trait method
-/// You must ensure proper alignment of Self, prefer 0x1
+/// You must ensure proper alignment of Self
 pub trait FromBytesUnchecked: Sized {
     /// # Safety
-    /// You must ensure proper alignment of Self, prefer 0x1
+    /// You must ensure proper alignment of Self
     unsafe fn from_bytes_unchecked(bytes: &[u8]) -> &Self {
         &*(bytes.as_ptr() as *const Self)
     }
     /// # Safety
-    /// You must ensure proper alignment of Self, prefer 0x1
+    /// You must ensure proper alignment of Self
     unsafe fn from_bytes_unchecked_mut(bytes: &mut [u8]) -> &mut Self {
         &mut *(bytes.as_mut_ptr() as *mut Self)
     }
@@ -54,7 +62,7 @@ pub trait ZcDeserialize
 where
     Self: AnyBitPattern + Discriminator + Len + OwnerProgram + Zc + Deserialize,
 {
-    fn try_deserialize<'a>(account_info: &'a AccountInfo) -> Result<Ref<'a, Self>> {
+    fn try_deserialize<'ix>(account_info: &'ix AccountInfo) -> Result<Ref<'ix, Self>> {
         try_deserialize_zc::<Self>(account_info)
     }
 }
@@ -63,7 +71,7 @@ pub trait ZcDeserializeMut
 where
     Self: Pod + Discriminator + Len + OwnerProgram + Zc + Deserialize + DeserializeMut,
 {
-    fn try_deserialize_mut<'a>(account_info: &'a AccountInfo) -> Result<RefMut<'a, Self>> {
+    fn try_deserialize_mut<'ix>(account_info: &'ix AccountInfo) -> Result<RefMut<'ix, Self>> {
         try_deserialize_zc_mut::<Self>(account_info)
     }
 }
@@ -72,17 +80,17 @@ pub trait ZcInitialize
 where
     Self: Pod + Discriminator + Len + OwnerProgram,
 {
-    fn try_initialize<'a>(
-        target_account: &'a AccountInfo,
-        init_accounts: InitAccounts<'a, '_>,
+    fn try_initialize<'ix>(
+        target_account: &'ix AccountInfo,
+        init_accounts: InitAccounts<'ix, '_>,
         signers: Option<&[Signer]>,
-    ) -> Result<RefMut<'a, Self>> {
+    ) -> Result<RefMut<'ix, Self>> {
         try_initialize_zc::<Self>(target_account, init_accounts, signers)
     }
 }
 
 #[inline(always)]
-pub fn try_deserialize_zc<'a, T>(account_info: &'a AccountInfo) -> Result<Ref<'a, T>>
+pub fn try_deserialize_zc<'ix, T>(account_info: &'ix AccountInfo) -> Result<Ref<'ix, T>>
 where
     T: AnyBitPattern + Discriminator + Len + OwnerProgram,
 {
@@ -124,7 +132,7 @@ where
 }
 
 #[inline(always)]
-pub fn try_deserialize_zc_mut<'a, T>(account_info: &'a AccountInfo) -> Result<RefMut<'a, T>>
+pub fn try_deserialize_zc_mut<'ix, T>(account_info: &'ix AccountInfo) -> Result<RefMut<'ix, T>>
 where
     T: Pod + Discriminator + Len + OwnerProgram,
 {
@@ -165,24 +173,24 @@ where
     }))
 }
 
-pub struct InitAccounts<'a, 'b>
+pub struct InitAccounts<'ix, 'b>
 where
-    'a: 'b,
+    'ix: 'b,
 {
     pub owner_program_id: &'b Pubkey,
-    pub payer_account: &'a AccountInfo,
-    pub system_program: &'a AccountInfo,
+    pub payer_account: &'ix AccountInfo,
+    pub system_program: &'ix AccountInfo,
 }
 
-impl<'a, 'b> InitAccounts<'a, 'b>
+impl<'ix, 'b> InitAccounts<'ix, 'b>
 where 
-    'a: 'b,
+    'ix: 'b,
 {
     #[inline(always)]
     pub fn new(
         owner_program_id: &'b Pubkey,
-        payer_account: &'a AccountInfo,
-        system_program: &'a AccountInfo,
+        payer_account: &'ix AccountInfo,
+        system_program: &'ix AccountInfo,
     ) -> Self {
         Self {
             owner_program_id,
@@ -193,11 +201,11 @@ where
 }
 
 #[inline(always)]
-pub fn try_initialize_zc<'a, T>(
-    target_account: &'a AccountInfo,
-    init_accounts: InitAccounts<'a, '_>,
+pub fn try_initialize_zc<'ix, T>(
+    target_account: &'ix AccountInfo,
+    init_accounts: InitAccounts<'ix, '_>,
     signers: Option<&[Signer]>,
-) -> Result<RefMut<'a, T>>
+) -> Result<RefMut<'ix, T>>
 where
     T: Pod + Discriminator + Len + OwnerProgram,
 {

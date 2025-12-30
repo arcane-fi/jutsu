@@ -21,11 +21,11 @@ pub enum AuthorityType {
     CloseAccount = 3,
 }
 
-pub struct SetAuthority<'a> {
+pub struct SetAuthority<'ix> {
     /// Account (Mint or Token)
-    pub account: &'a AccountInfo,
+    pub account: &'ix AccountInfo,
     /// Authority of the account
-    pub authority: &'a AccountInfo,
+    pub authority: &'ix AccountInfo,
 }
 
 impl CheckProgramId for SetAuthority<'_> {
@@ -35,10 +35,10 @@ impl CheckProgramId for SetAuthority<'_> {
 const DISCRIMINATOR: [u8; 1] = [6];
 
 #[inline(always)]
-pub fn set_authority<'a>(
-    cpi_ctx: CpiCtx<'a, '_, '_, '_, SetAuthority<'a>>,
+pub fn set_authority<'ix>(
+    cpi_ctx: CpiCtx<'ix, '_, '_, '_, SetAuthority<'ix>>,
     authority_type: AuthorityType,
-    new_authority: Option<&'a Pubkey>,
+    new_authority: Option<&'ix Pubkey>,
 ) -> Result<()> {
     let infos = [cpi_ctx.account, cpi_ctx.authority];
     let metas = [

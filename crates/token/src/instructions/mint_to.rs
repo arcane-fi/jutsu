@@ -12,13 +12,13 @@ use pinocchio::{
     pubkey::Pubkey,
 };
 
-pub struct MintTo<'a> {
+pub struct MintTo<'ix> {
     /// Mint account
-    pub mint: &'a AccountInfo,
+    pub mint: &'ix AccountInfo,
     /// Destination account
-    pub destination: &'a AccountInfo,
+    pub destination: &'ix AccountInfo,
     /// Mint authority account
-    pub authority: &'a AccountInfo,
+    pub authority: &'ix AccountInfo,
 }
 
 impl CheckProgramId for MintTo<'_> {
@@ -28,7 +28,7 @@ impl CheckProgramId for MintTo<'_> {
 const DISCRIMINATOR: [u8; 1] = [7];
 
 #[inline(always)]
-pub fn mint_to<'a>(cpi_ctx: CpiCtx<'a, '_, '_, '_, MintTo<'a>>, amount: u64) -> Result<()> {
+pub fn mint_to<'ix>(cpi_ctx: CpiCtx<'ix, '_, '_, '_, MintTo<'ix>>, amount: u64) -> Result<()> {
     let infos = [cpi_ctx.mint, cpi_ctx.destination, cpi_ctx.authority];
     let metas = [
         AccountMeta::writable(cpi_ctx.mint.key()),

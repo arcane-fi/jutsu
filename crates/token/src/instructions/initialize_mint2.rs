@@ -12,9 +12,9 @@ use pinocchio::{
     pubkey::Pubkey,
 };
 
-pub struct InitializeMint2<'a> {
+pub struct InitializeMint2<'ix> {
     /// Mint account
-    pub mint: &'a AccountInfo,
+    pub mint: &'ix AccountInfo,
 }
 
 impl CheckProgramId for InitializeMint2<'_> {
@@ -24,8 +24,8 @@ impl CheckProgramId for InitializeMint2<'_> {
 const DISCRIMINATOR: [u8; 1] = [20];
 
 #[inline(always)]
-pub fn initialize_mint2<'a>(
-    cpi_ctx: CpiCtx<'a, '_, '_, '_, InitializeMint2<'a>>,
+pub fn initialize_mint2<'ix>(
+    cpi_ctx: CpiCtx<'ix, '_, '_, '_, InitializeMint2<'ix>>,
     decimals: u8,
     mint_authority: &Pubkey,
     freeze_authority: Option<&Pubkey>,

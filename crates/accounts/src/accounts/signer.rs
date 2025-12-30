@@ -6,13 +6,13 @@ use hayabusa_errors::{ErrorCode, Result};
 use hayabusa_utility::fail_with_ctx;
 use pinocchio::{account_info::AccountInfo, hint::unlikely, pubkey::Pubkey};
 
-pub struct Signer<'a> {
-    pub account_info: &'a AccountInfo,
+pub struct Signer<'ix> {
+    pub account_info: &'ix AccountInfo,
 }
 
-impl<'a> FromAccountInfo<'a> for Signer<'a> {
+impl<'ix> FromAccountInfo<'ix> for Signer<'ix> {
     #[inline(always)]
-    fn try_from_account_info(account_info: &'a AccountInfo) -> Result<Self> {
+    fn try_from_account_info(account_info: &'ix AccountInfo) -> Result<Self> {
         if unlikely(!account_info.is_signer()) {
             fail_with_ctx!(
                 "HAYABUSA_SIGNER_ACCOUNT_NOT_SIGNER",
@@ -25,18 +25,18 @@ impl<'a> FromAccountInfo<'a> for Signer<'a> {
     }
 }
 
-impl<'a> ToAccountInfo<'a> for Signer<'a> {
+impl<'ix> ToAccountInfo<'ix> for Signer<'ix> {
     #[inline(always)]
-    fn to_account_info(&self) -> &'a AccountInfo {
+    fn to_account_info(&self) -> &'ix AccountInfo {
         self.account_info
     }
 }
 
-impl<'a> Key for Signer<'a> {
+impl Key for Signer<'_> {
     #[inline(always)]
     fn key(&self) -> &Pubkey {
         self.account_info.key()
     }
 }
 
-impl<'a> WritableAllowed for Signer<'a> {}
+impl WritableAllowed for Signer<'_> {}

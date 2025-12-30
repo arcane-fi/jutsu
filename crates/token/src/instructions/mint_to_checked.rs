@@ -12,13 +12,13 @@ use pinocchio::{
     pubkey::Pubkey,
 };
 
-pub struct MintToChecked<'a> {
+pub struct MintToChecked<'ix> {
     /// Mint account
-    pub mint: &'a AccountInfo,
+    pub mint: &'ix AccountInfo,
     /// Destination account
-    pub destination: &'a AccountInfo,
+    pub destination: &'ix AccountInfo,
     /// Mint authority account
-    pub authority: &'a AccountInfo,
+    pub authority: &'ix AccountInfo,
 }
 
 impl CheckProgramId for MintToChecked<'_> {
@@ -28,8 +28,8 @@ impl CheckProgramId for MintToChecked<'_> {
 const DISCRIMINATOR: [u8; 1] = [14];
 
 #[inline(always)]
-pub fn mint_to_checked<'a>(
-    cpi_ctx: CpiCtx<'a, '_, '_, '_, MintToChecked<'a>>,
+pub fn mint_to_checked<'ix>(
+    cpi_ctx: CpiCtx<'ix, '_, '_, '_, MintToChecked<'ix>>,
     amount: u64,
     decimals: u8,
 ) -> Result<()> {

@@ -8,20 +8,20 @@ use pinocchio::{
     account_info::AccountInfo, hint::unlikely, program_error::ProgramError, pubkey::Pubkey,
 };
 
-pub struct Program<'a, T>
+pub struct Program<'ix, T>
 where
     T: ProgramId,
 {
-    pub account_info: &'a AccountInfo,
+    pub account_info: &'ix AccountInfo,
     _phantom: core::marker::PhantomData<T>,
 }
 
-impl<'a, T> FromAccountInfo<'a> for Program<'a, T>
+impl<'ix, T> FromAccountInfo<'ix> for Program<'ix, T>
 where
     T: ProgramId,
 {
     #[inline(always)]
-    fn try_from_account_info(account_info: &'a AccountInfo) -> Result<Self> {
+    fn try_from_account_info(account_info: &'ix AccountInfo) -> Result<Self> {
         if unlikely(account_info.key() != &T::ID) {
             fail_with_ctx!(
                 "HAYABUSA_PROGRAM_ID_MISMATCH",
@@ -38,17 +38,17 @@ where
     }
 }
 
-impl<'a, T> ToAccountInfo<'a> for Program<'a, T>
+impl<'ix, T> ToAccountInfo<'ix> for Program<'ix, T>
 where
     T: ProgramId,
 {
     #[inline(always)]
-    fn to_account_info(&self) -> &'a AccountInfo {
+    fn to_account_info(&self) -> &'ix AccountInfo {
         self.account_info
     }
 }
 
-impl<'a, T> Key for Program<'a, T>
+impl<T> Key for Program<'_, T>
 where
     T: ProgramId,
 {

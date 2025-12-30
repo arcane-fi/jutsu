@@ -5,35 +5,35 @@ use crate::{FromAccountInfo, Key, ToAccountInfo, WritableAllowed};
 use hayabusa_errors::Result;
 use pinocchio::{account_info::AccountInfo, pubkey::Pubkey};
 
-pub struct UncheckedAccount<'a> {
-    pub account_info: &'a AccountInfo,
+pub struct UncheckedAccount<'ix> {
+    pub account_info: &'ix AccountInfo,
 }
 
-impl<'a> FromAccountInfo<'a> for UncheckedAccount<'a> {
+impl<'ix> FromAccountInfo<'ix> for UncheckedAccount<'ix> {
     #[inline(always)]
-    fn try_from_account_info(account_info: &'a AccountInfo) -> Result<Self> {
+    fn try_from_account_info(account_info: &'ix AccountInfo) -> Result<Self> {
         Ok(UncheckedAccount { account_info })
     }
 }
 
-impl<'a> ToAccountInfo<'a> for UncheckedAccount<'a> {
+impl<'ix> ToAccountInfo<'ix> for UncheckedAccount<'ix> {
     #[inline(always)]
-    fn to_account_info(&self) -> &'a AccountInfo {
+    fn to_account_info(&self) -> &'ix AccountInfo {
         self.account_info
     }
 }
 
-impl<'a> Key for UncheckedAccount<'a> {
+impl Key for UncheckedAccount<'_> {
     #[inline(always)]
     fn key(&self) -> &Pubkey {
         self.account_info.key()
     }
 }
 
-impl<'a> core::ops::Deref for UncheckedAccount<'a> {
+impl<'ix> core::ops::Deref for UncheckedAccount<'ix> {
     type Target = AccountInfo;
 
-    fn deref(&self) -> &'a Self::Target {
+    fn deref(&self) -> &'ix Self::Target {
         self.account_info
     }
 }

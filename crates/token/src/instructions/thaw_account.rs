@@ -10,13 +10,13 @@ use pinocchio::{
     pubkey::Pubkey,
 };
 
-pub struct ThawAccount<'a> {
+pub struct ThawAccount<'ix> {
     /// Token account to thaw
-    pub account: &'a AccountInfo,
+    pub account: &'ix AccountInfo,
     /// Mint account
-    pub mint: &'a AccountInfo,
+    pub mint: &'ix AccountInfo,
     /// Mint freeze authority account
-    pub freeze_authority: &'a AccountInfo,
+    pub freeze_authority: &'ix AccountInfo,
 }
 
 impl CheckProgramId for ThawAccount<'_> {
@@ -25,7 +25,7 @@ impl CheckProgramId for ThawAccount<'_> {
 
 const DISCRIMINATOR: [u8; 1] = [11];
 
-pub fn thaw_account<'a>(cpi_ctx: CpiCtx<'a, '_, '_, '_, ThawAccount<'a>>) -> Result<()> {
+pub fn thaw_account<'ix>(cpi_ctx: CpiCtx<'ix, '_, '_, '_, ThawAccount<'ix>>) -> Result<()> {
     let infos = [cpi_ctx.account, cpi_ctx.mint, cpi_ctx.freeze_authority];
     let metas = [
         AccountMeta::writable(cpi_ctx.account.key()),

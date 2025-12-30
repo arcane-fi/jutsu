@@ -10,9 +10,9 @@ use pinocchio::{
     pubkey::Pubkey,
 };
 
-pub struct Assign<'a> {
+pub struct Assign<'ix> {
     /// Account to be assigned to a program
-    pub account: &'a AccountInfo,
+    pub account: &'ix AccountInfo,
 }
 
 impl CheckProgramId for Assign<'_> {
@@ -20,7 +20,7 @@ impl CheckProgramId for Assign<'_> {
 }
 
 #[inline(always)]
-pub fn assign<'a>(cpi_ctx: CpiCtx<'a, '_, '_, '_, Assign<'a>>, owner: &Pubkey) -> Result<()> {
+pub fn assign<'ix>(cpi_ctx: CpiCtx<'ix, '_, '_, '_, Assign<'ix>>, owner: &Pubkey) -> Result<()> {
     let infos = [cpi_ctx.account];
     let metas = [AccountMeta::writable_signer(cpi_ctx.account.key())];
 

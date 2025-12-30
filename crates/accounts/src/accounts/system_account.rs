@@ -6,13 +6,13 @@ use hayabusa_errors::{ErrorCode, Result};
 use hayabusa_utility::fail_with_ctx;
 use pinocchio::{account_info::AccountInfo, hint::unlikely, pubkey::Pubkey};
 
-pub struct SystemAccount<'a> {
-    pub account_info: &'a AccountInfo,
+pub struct SystemAccount<'ix> {
+    pub account_info: &'ix AccountInfo,
 }
 
-impl<'a> FromAccountInfo<'a> for SystemAccount<'a> {
+impl<'ix> FromAccountInfo<'ix> for SystemAccount<'ix> {
     #[inline(always)]
-    fn try_from_account_info(account_info: &'a AccountInfo) -> Result<Self> {
+    fn try_from_account_info(account_info: &'ix AccountInfo) -> Result<Self> {
         if unlikely(account_info.owner() != &hayabusa_system_program::ID) {
             fail_with_ctx!(
                 "HAYABUSA_INVALID_SYSTEM_ACCOUNT",
@@ -25,18 +25,18 @@ impl<'a> FromAccountInfo<'a> for SystemAccount<'a> {
     }
 }
 
-impl<'a> ToAccountInfo<'a> for SystemAccount<'a> {
+impl<'ix> ToAccountInfo<'ix> for SystemAccount<'ix> {
     #[inline(always)]
-    fn to_account_info(&self) -> &'a AccountInfo {
+    fn to_account_info(&self) -> &'ix AccountInfo {
         self.account_info
     }
 }
 
-impl<'a> Key for SystemAccount<'a> {
+impl Key for SystemAccount<'_> {
     #[inline(always)]
     fn key(&self) -> &Pubkey {
         self.account_info.key()
     }
 }
 
-impl<'a> WritableAllowed for SystemAccount<'a> {}
+impl WritableAllowed for SystemAccount<'_> {}

@@ -11,11 +11,11 @@ use pinocchio::{
     pubkey::Pubkey,
 };
 
-pub struct CreateAccount<'a> {
+pub struct CreateAccount<'ix> {
     /// Funding account
-    pub from: &'a AccountInfo,
+    pub from: &'ix AccountInfo,
     /// New account
-    pub to: &'a AccountInfo,
+    pub to: &'ix AccountInfo,
 }
 
 impl CheckProgramId for CreateAccount<'_> {
@@ -23,8 +23,8 @@ impl CheckProgramId for CreateAccount<'_> {
 }
 
 #[inline]
-pub fn create_account<'a>(
-    cpi_ctx: CpiCtx<'a, '_, '_, '_, CreateAccount<'a>>,
+pub fn create_account<'ix>(
+    cpi_ctx: CpiCtx<'ix, '_, '_, '_, CreateAccount<'ix>>,
     owner_program: &Pubkey,
     space: u64,
 ) -> Result<()> {

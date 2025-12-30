@@ -12,15 +12,15 @@ use pinocchio::{
     pubkey::Pubkey,
 };
 
-pub struct TransferChecked<'a> {
+pub struct TransferChecked<'ix> {
     /// Sender account
-    pub from: &'a AccountInfo,
+    pub from: &'ix AccountInfo,
     /// Mint account
-    pub mint: &'a AccountInfo,
+    pub mint: &'ix AccountInfo,
     /// Recipient account
-    pub to: &'a AccountInfo,
+    pub to: &'ix AccountInfo,
     /// Authority account
-    pub authority: &'a AccountInfo,
+    pub authority: &'ix AccountInfo,
 }
 
 impl CheckProgramId for TransferChecked<'_> {
@@ -30,8 +30,8 @@ impl CheckProgramId for TransferChecked<'_> {
 const DISCRIMINATOR: [u8; 1] = [12];
 
 #[inline(always)]
-pub fn transfer_checked<'a>(
-    cpi_ctx: CpiCtx<'a, '_, '_, '_, TransferChecked<'a>>,
+pub fn transfer_checked<'ix>(
+    cpi_ctx: CpiCtx<'ix, '_, '_, '_, TransferChecked<'ix>>,
     amount: u64,
     decimals: u8,
 ) -> Result<()> {
