@@ -37,11 +37,34 @@ where
     Self: Sized + FromBytesUnchecked + Zc + Deserialize + DeserializeMut,
 {
     fn try_deserialize_raw_mut<'ix>(account_info: &'ix AccountInfo) -> Result<RefMut<'ix, Self>>;
+}
 
-    unsafe fn deserialize_raw_mut_unchecked(account_info: &AccountInfo) -> &mut Self {
+pub trait RawZcDeserializeUnchecked
+where
+    Self: Sized + FromBytesUnchecked + Zc + Deserialize,
+{
+    /// # Safety
+    /// Caller must ensure the account data is properly aligned
+    /// and that there are no mutable references to the underlying `AccountInfo` data
+    unsafe fn deserialize_raw_unchecked(account_info: &AccountInfo) -> &Self {
+        Self::from_bytes_unchecked(account_info.borrow_data_unchecked())
+    }
+}
+
+pub trait RawZcDeserializeUncheckedMut
+where
+    Self: Sized + FromBytesUnchecked + Zc + Deserialize + DeserializeMut,
+{
+    /// # Safety
+    /// Caller must ensure the account data is properly aligned
+    /// and that there are no other references to the underlying `AccountInfo` data
+    unsafe fn deserialize_raw_unchecked_mut(account_info: &AccountInfo) -> &mut Self {
         Self::from_bytes_unchecked_mut(account_info.borrow_mut_data_unchecked())
     }
 }
+
+impl<T> RawZcDeserializeUnchecked for T where T: FromBytesUnchecked + Zc + Deserialize {}
+impl<T> RawZcDeserializeUncheckedMut for T where T: FromBytesUnchecked + Zc + Deserialize + DeserializeMut {}
 
 /// Unsafe to call either trait method
 /// You must ensure proper alignment of Self
