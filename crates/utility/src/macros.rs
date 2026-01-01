@@ -69,3 +69,17 @@ macro_rules! dump_raw {
         pinocchio::log::sol_log_data(&[$($arg),*]);
     };
 }
+
+#[macro_export]
+macro_rules! slot {
+    () => {
+        Clock::get()?.slot
+    };
+}
+
+#[macro_export]
+macro_rules! unix_ts {
+    () => {
+        Clock::get()?.unix_timestamp
+    };
+}
