@@ -1,7 +1,8 @@
 // Copyright (c) 2025, Arcane Labs <dev@arcane.fi>
 // SPDX-License-Identifier: Apache-2.0
 
-use hayabusa_ser::{Deserialize, FromBytesUnchecked, RawZcDeserialize, Zc};
+use hayabusa_ser::{Deserialize, FromBytesUnchecked, RawZcDeserialize, RawZcDeserializeUnchecked, Zc};
+use hayabusa_errors::Result;
 use hayabusa_utility::fail_with_ctx;
 use pinocchio::{
     account_info::{AccountInfo, Ref},
@@ -29,9 +30,9 @@ impl Zc for Multisig {}
 impl Deserialize for Multisig {}
 
 unsafe impl RawZcDeserialize for Multisig {
-    fn try_deserialize_raw<'ix>(
-        account_info: &'ix AccountInfo,
-    ) -> hayabusa_errors::Result<Ref<'ix, Self>> {
+    fn try_deserialize_raw(
+        account_info: &AccountInfo,
+    ) -> hayabusa_errors::Result<Ref<Self>> {
         if unlikely(account_info.data_len() != Self::LEN) {
             fail_with_ctx!(
                 "HAYABUSA_SER_MULTISIG_ACCOUNT_DATA_TOO_SHORT",
@@ -53,6 +54,31 @@ unsafe impl RawZcDeserialize for Multisig {
         Ok(Ref::map(account_info.try_borrow_data()?, |d| unsafe {
             Self::from_bytes_unchecked(d)
         }))
+    }
+}
+
+impl RawZcDeserializeUnchecked for Multisig {
+    #[inline(always)]
+    unsafe fn deserialize_raw_unchecked(account_info: &AccountInfo) -> Result<&Self> {
+        if unlikely(account_info.data_len() != Self::LEN) {
+            fail_with_ctx!(
+                "HAYABUSA_SER_RAW_MULTISIG_ACCOUNT_DATA_TOO_SHORT",
+                ProgramError::InvalidAccountData,
+                account_info.key(),
+            );
+        }
+
+        if unlikely(!account_info.is_owned_by(&crate::ID)) {
+            fail_with_ctx!(
+                "HAYABUSA_SER_RAW_MULTISIG_ACCOUNT_INVALID_OWNER",
+                ProgramError::InvalidAccountOwner,
+                account_info.key(),
+                account_info.owner(),
+                &crate::ID,
+            );
+        }
+
+        Ok(Self::from_bytes_unchecked(account_info.borrow_data_unchecked()))
     }
 }
 

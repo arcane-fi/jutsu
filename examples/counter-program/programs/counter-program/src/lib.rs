@@ -36,7 +36,7 @@ struct UpdateCounterInstruction {
     amount: u64, // field name must map identically to the instruction param name, and be in the same order.
 }
 
-fn update_counter<'a>(ctx: Ctx<'a, UpdateCounter<'a>>, amount: u64) -> Result<()> {
+fn update_counter<'ix>(ctx: Ctx<'ix, UpdateCounter<'ix>>, amount: u64) -> Result<()> {
     let mut counter = ctx.counter.try_deserialize_mut()?;
 
     counter.count += amount;
@@ -44,15 +44,15 @@ fn update_counter<'a>(ctx: Ctx<'a, UpdateCounter<'a>>, amount: u64) -> Result<()
     Ok(())
 }
 
-pub struct UpdateCounter<'a> {
-    pub user: Signer<'a>,
-    pub counter: Mut<'a, ZcAccount<'a, CounterAccount>>,
+pub struct UpdateCounter<'ix> {
+    pub user: Signer<'ix>,
+    pub counter: Mut<'ix, ZcAccount<'ix, CounterAccount>>,
 }
 
 // Intentionally kept manual, you get to see what the FromAccountInfos proc macro is doing
-impl<'a> FromAccountInfos<'a> for UpdateCounter<'a> {
+impl<'ix> FromAccountInfos<'ix> for UpdateCounter<'ix> {
     #[inline(always)]
-    fn try_from_account_infos(account_infos: &mut AccountIter<'a>) -> Result<Self> {
+    fn try_from_account_infos(account_infos: &mut AccountIter<'ix>) -> Result<Self> {
         let user = Signer::try_from_account_info(account_infos.next()?)?;
         let counter = Mut::try_from_account_info(account_infos.next()?)?;
 
@@ -67,7 +67,7 @@ impl<'a> FromAccountInfos<'a> for UpdateCounter<'a> {
 #[repr(C)]
 struct InitializeCounterInstruction {}
 
-fn initialize_counter<'a>(ctx: Ctx<'a, InitializeCounter<'a>>) -> Result<()> {
+fn initialize_counter<'ix>(ctx: Ctx<'ix, InitializeCounter<'ix>>) -> Result<()> {
     // account is zeroed on init
     let _ = ctx.counter.try_initialize(
         InitAccounts::new(
@@ -82,10 +82,10 @@ fn initialize_counter<'a>(ctx: Ctx<'a, InitializeCounter<'a>>) -> Result<()> {
 }
 
 #[derive(FromAccountInfos)]
-pub struct InitializeCounter<'a> {
-    pub user: Mut<'a, Signer<'a>>,
-    pub counter: Mut<'a, ZcAccount<'a, CounterAccount>>,
-    pub system_program: Program<'a, System>,
+pub struct InitializeCounter<'ix> {
+    pub user: Mut<'ix, Signer<'ix>>,
+    pub counter: Mut<'ix, ZcAccount<'ix, CounterAccount>>,
+    pub system_program: Program<'ix, System>,
 }
 
 #[account]

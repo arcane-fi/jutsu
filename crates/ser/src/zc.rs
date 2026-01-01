@@ -23,7 +23,7 @@ use pinocchio::{
 /// # Safety
 /// You must ensure proper alignment of Self
 pub unsafe trait RawZcDeserialize: Sized + FromBytesUnchecked + Zc + Deserialize {
-    fn try_deserialize_raw<'ix>(account_info: &'ix AccountInfo) -> Result<Ref<'ix, Self>>;
+    fn try_deserialize_raw(account_info: &AccountInfo) -> Result<Ref<Self>>;
 }
 
 /// # Safety
@@ -32,12 +32,12 @@ pub unsafe trait RawZcDeserializeMut
 where
     Self: Sized + FromBytesUnchecked + Zc + Deserialize + DeserializeMut,
 {
-    fn try_deserialize_raw_mut<'ix>(account_info: &'ix AccountInfo) -> Result<RefMut<'ix, Self>>;
+    fn try_deserialize_raw_mut(account_info: &AccountInfo) -> Result<RefMut<Self>>;
 }
 
 pub trait RawZcDeserializeUnchecked
 where
-    Self: Sized + FromBytesUnchecked + Zc + Deserialize + Discriminator,
+    Self: Sized + FromBytesUnchecked + Zc + Deserialize,
 {
     /// # Safety
     /// Caller must ensure the account data is properly aligned to be cast to `Self`
@@ -45,15 +45,40 @@ where
     /// and that there are no mutable references to the underlying `AccountInfo` data
     /// 
     /// and that the `AccountInfo` data slice len is >8 (to account for discriminator, account data starts at index 8)
-    unsafe fn deserialize_raw_unchecked(account_info: &AccountInfo) -> &Self {
+    unsafe fn deserialize_raw_unchecked(account_info: &AccountInfo) -> Result<&Self>;
+}
+
+impl<T> RawZcDeserializeUnchecked for T
+where 
+    T: Sized + FromBytesUnchecked + Zc + Deserialize + Discriminator + Len + OwnerProgram,
+{
+    #[inline(always)]
+    unsafe fn deserialize_raw_unchecked(account_info: &AccountInfo) -> Result<&Self> {
+        if unlikely(account_info.data_len() != T::DISCRIMINATED_LEN) {
+            fail_with_ctx!(
+                "HAYABUSA_SER_RAW_UNCHECKED_WRONG_DATA_LEN",
+                ProgramError::InvalidAccountData,
+                account_info.key(),
+            );
+        }
+
+        if unlikely(!account_info.is_owned_by(&T::OWNER)) {
+            fail_with_ctx!(
+                "HAYABUSA_SER_RAW_UNCHECKED_WRONG_OWNER",
+                ProgramError::InvalidAccountOwner,
+                account_info.key(),
+            );
+        }
+        
         let undiscriminated_account_data = &account_info.borrow_data_unchecked()[8..];
-        Self::from_bytes_unchecked(undiscriminated_account_data)
+
+        Ok(Self::from_bytes_unchecked(undiscriminated_account_data))
     }
 }
 
 pub trait RawZcDeserializeUncheckedMut
 where
-    Self: Sized + FromBytesUnchecked + Zc + Deserialize + DeserializeMut + Discriminator,
+    Self: Sized + FromBytesUnchecked + Zc + Deserialize + DeserializeMut,
 {
     /// # Safety
     /// Caller must ensure the account data is properly aligned to be cast to `Self`,
@@ -61,14 +86,36 @@ where
     /// that there are no other references to the underlying `AccountInfo` data,
     /// 
     /// and that the `AccountInfo` data slice len is >8 (to account for discriminator, account data starts at index 8)
-    unsafe fn deserialize_raw_unchecked_mut(account_info: &AccountInfo) -> &mut Self {
-        let undiscriminated_account_data = &mut account_info.borrow_mut_data_unchecked()[8..];
-        Self::from_bytes_unchecked_mut(undiscriminated_account_data)
-    }
+    unsafe fn deserialize_raw_unchecked_mut(account_info: &AccountInfo) -> Result<&mut Self>;
 }
 
-impl<T> RawZcDeserializeUnchecked for T where T: FromBytesUnchecked + Zc + Deserialize + Discriminator {}
-impl<T> RawZcDeserializeUncheckedMut for T where T: FromBytesUnchecked + Zc + Deserialize + DeserializeMut + Discriminator {}
+impl<T> RawZcDeserializeUncheckedMut for T
+where 
+    T: Sized + FromBytesUnchecked + Zc + Deserialize + DeserializeMut + Discriminator + Len + OwnerProgram,
+{
+    #[inline(always)]
+    unsafe fn deserialize_raw_unchecked_mut(account_info: &AccountInfo) -> Result<&mut Self> {
+        if unlikely(account_info.data_len() != T::DISCRIMINATED_LEN) {
+            fail_with_ctx!(
+                "HAYABUSA_SER_RAW_UNCHECKED_MUT_WRONG_DATA_LEN",
+                ProgramError::InvalidAccountData,
+                account_info.key(),
+            );
+        }
+
+        if unlikely(!account_info.is_owned_by(&T::OWNER)) {
+            fail_with_ctx!(
+                "HAYABUSA_SER_RAW_UNCHECKED_MUT_WRONG_OWNER",
+                ProgramError::InvalidAccountOwner,
+                account_info.key(),
+            );
+        }
+
+        let undiscriminated_account_data = &mut account_info.borrow_mut_data_unchecked()[8..];
+
+        Ok(Self::from_bytes_unchecked_mut(undiscriminated_account_data))
+    }
+}
 
 /// Unsafe to call either trait method
 /// 
@@ -90,7 +137,7 @@ pub trait ZcDeserialize
 where
     Self: AnyBitPattern + Discriminator + Len + OwnerProgram + Zc + Deserialize,
 {
-    fn try_deserialize<'ix>(account_info: &'ix AccountInfo) -> Result<Ref<'ix, Self>> {
+    fn try_deserialize(account_info: &AccountInfo) -> Result<Ref<Self>> {
         try_deserialize_zc::<Self>(account_info)
     }
 }
@@ -99,7 +146,7 @@ pub trait ZcDeserializeMut
 where
     Self: Pod + Discriminator + Len + OwnerProgram + Zc + Deserialize + DeserializeMut,
 {
-    fn try_deserialize_mut<'ix>(account_info: &'ix AccountInfo) -> Result<RefMut<'ix, Self>> {
+    fn try_deserialize_mut(account_info: &AccountInfo) -> Result<RefMut<Self>> {
         try_deserialize_zc_mut::<Self>(account_info)
     }
 }
@@ -118,7 +165,7 @@ where
 }
 
 #[inline(always)]
-pub fn try_deserialize_zc<'ix, T>(account_info: &'ix AccountInfo) -> Result<Ref<'ix, T>>
+pub fn try_deserialize_zc<T>(account_info: &AccountInfo) -> Result<Ref<T>>
 where
     T: AnyBitPattern + Discriminator + Len + OwnerProgram,
 {
@@ -160,7 +207,7 @@ where
 }
 
 #[inline(always)]
-pub fn try_deserialize_zc_mut<'ix, T>(account_info: &'ix AccountInfo) -> Result<RefMut<'ix, T>>
+pub fn try_deserialize_zc_mut<T>(account_info: &AccountInfo) -> Result<RefMut<T>>
 where
     T: Pod + Discriminator + Len + OwnerProgram,
 {
@@ -237,7 +284,7 @@ pub fn try_initialize_zc<'ix, T>(
 where
     T: Pod + Discriminator + Len + OwnerProgram,
 {
-    // if the account already allocated, this will error, guarantees that the account is uninitialized
+    // if the account already allocated, this will fail, guarantees that the account is uninitialized
     let cpi_ctx = CpiCtx::try_new(
         init_accounts.system_program,
         CreateAccount {

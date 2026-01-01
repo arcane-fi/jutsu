@@ -101,7 +101,7 @@ where
     }
 }
 
-impl<'ix, T> Key for ZcAccount<'ix, T>
+impl<T> Key for ZcAccount<'_, T>
 where
     T: Zc + Deserialize,
 {
@@ -111,4 +111,4 @@ where
     }
 }
 
-impl<'ix, T> WritableAllowed for ZcAccount<'ix, T> where T: Zc + Deserialize {}
+impl<T> WritableAllowed for ZcAccount<'_, T> where T: Zc + Deserialize {}

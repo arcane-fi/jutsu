@@ -2,7 +2,8 @@
 // SPDX-License-Identifier: Apache-2.0
 
 use super::AccountState;
-use hayabusa_ser::{Deserialize, FromBytesUnchecked, RawZcDeserialize, Zc};
+use hayabusa_ser::{Deserialize, FromBytesUnchecked, RawZcDeserialize, RawZcDeserializeUnchecked, Zc};
+use hayabusa_errors::Result;
 use hayabusa_utility::fail_with_ctx;
 use pinocchio::{
     account_info::{AccountInfo, Ref},
@@ -58,16 +59,14 @@ impl Deserialize for TokenAccount {}
 
 unsafe impl RawZcDeserialize for TokenAccount {
     #[inline]
-    fn try_deserialize_raw<'ix>(
-        account_info: &'ix AccountInfo,
-    ) -> Result<Ref<'ix, Self>, ProgramError> {
+    fn try_deserialize_raw(
+        account_info: &AccountInfo,
+    ) -> Result<Ref<Self>> {
         if unlikely(account_info.data_len() != Self::LEN) {
             fail_with_ctx!(
                 "HAYABUSA_SER_TOKEN_ACCOUNT_DATA_TOO_SHORT",
                 ProgramError::InvalidAccountData,
                 account_info.key(),
-                &u32::to_le_bytes(account_info.data_len() as u32),
-                &u32::to_le_bytes(Self::LEN as u32),
             );
         }
 
@@ -84,6 +83,31 @@ unsafe impl RawZcDeserialize for TokenAccount {
         Ok(Ref::map(account_info.try_borrow_data()?, |d| unsafe {
             Self::from_bytes_unchecked(d)
         }))
+    }
+}
+
+impl RawZcDeserializeUnchecked for TokenAccount {
+    #[inline(always)]
+    unsafe fn deserialize_raw_unchecked(account_info: &AccountInfo) -> Result<&Self> {
+        if unlikely(account_info.data_len() != Self::LEN) {
+            fail_with_ctx!(
+                "HAYABUSA_SER_RAW_TOKEN_ACCOUNT_DATA_TOO_SHORT",
+                ProgramError::InvalidAccountData,
+                account_info.key(),
+            );
+        }
+
+        if unlikely(!account_info.is_owned_by(&crate::ID)) {
+            fail_with_ctx!(
+                "HAYABUSA_SER_RAW_TOKEN_ACCOUNT_INVALID_OWNER",
+                ProgramError::InvalidAccountOwner,
+                account_info.key(),
+                account_info.owner(),
+                &crate::ID,
+            );
+        }
+
+        Ok(Self::from_bytes_unchecked(account_info.borrow_data_unchecked()))
     }
 }
 
