@@ -8,7 +8,6 @@ use hayabusa_utility::error_msg;
 use pinocchio::{
     account_info::AccountInfo, hint::unlikely, program_error::ProgramError, pubkey::Pubkey,
 };
-use pinocchio_log::log;
 
 pub struct Program<'ix, T>
 where

@@ -6,7 +6,6 @@ use core::ops::Deref;
 use hayabusa_errors::{ErrorCode, Result};
 use hayabusa_utility::error_msg;
 use pinocchio::{account_info::AccountInfo, hint::unlikely, pubkey::Pubkey};
-use pinocchio_log::log;
 
 pub struct Mut<T>(pub T);
 

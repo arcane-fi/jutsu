@@ -6,7 +6,6 @@
 use hayabusa_errors::{ErrorCode, Result};
 use hayabusa_utility::error_msg;
 use pinocchio::{account_info::AccountInfo, hint::unlikely};
-use pinocchio_log::log;
 
 pub trait FromAccountInfos<'ix>
 where
