@@ -3,4 +3,16 @@
 
 #![no_std]
 
+pub mod instructions;
 pub mod state;
+
+pinocchio_pubkey::declare_id!("TokenzQdBNbLqP5VEhdkAS6EPFLC1PHnBqCXEpPxuEb");
+
+use hayabusa_accounts::ProgramId;
+use pinocchio::pubkey::Pubkey;
+
+pub struct Token;
+
+impl ProgramId for Token {
+    const ID: Pubkey = ID;
+}

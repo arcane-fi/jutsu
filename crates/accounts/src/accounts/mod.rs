@@ -1,6 +1,7 @@
 // Copyright (c) 2025, Arcane Labs <dev@arcane.fi>
 // SPDX-License-Identifier: Apache-2.0
 
+pub mod interface;
 pub mod mutable;
 pub mod program;
 pub mod signer;

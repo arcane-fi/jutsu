@@ -44,7 +44,7 @@ unsafe impl RawZcDeserialize for Multisig {
             );
         }
 
-        if unlikely(!account_info.is_owned_by(&crate::ID)) {
+        if unlikely(!account_info.is_owned_by(&Self::OWNER)) {
             error_msg!(
                 "Multisig::try_deserialize_raw: invalid owner",
                 ProgramError::InvalidAccountOwner,
@@ -67,7 +67,7 @@ impl RawZcDeserializeUnchecked for Multisig {
             );
         }
 
-        if unlikely(!account_info.is_owned_by(&crate::ID)) {
+        if unlikely(!account_info.is_owned_by(&Self::OWNER)) {
             error_msg!(
                 "Multisig::try_deserialize_raw_unchecked_mut: invalid owner",
                 ProgramError::InvalidAccountOwner,

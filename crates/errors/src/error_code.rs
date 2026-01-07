@@ -11,6 +11,7 @@ pub enum ErrorCode {
     AccountNotSigner,
     InvalidAccount,
     AccountNotWritable,
+    InvalidProgram,
 }
 
 impl TryFrom<u32> for ErrorCode {
@@ -24,6 +25,7 @@ impl TryFrom<u32> for ErrorCode {
             105 => Ok(ErrorCode::AccountNotSigner),
             106 => Ok(ErrorCode::InvalidAccount),
             107 => Ok(ErrorCode::AccountNotWritable),
+            108 => Ok(ErrorCode::InvalidProgram),
             _ => Err(ProgramError::InvalidArgument),
         }
     }
@@ -47,6 +49,7 @@ impl ToStr for ErrorCode {
             ErrorCode::AccountNotSigner => "Error: Account is not a signer",
             ErrorCode::InvalidAccount => "Error: Invalid account",
             ErrorCode::AccountNotWritable => "Error: Account is not writable",
+            ErrorCode::InvalidProgram => "Error: Invalid program",
         }
     }
 }

@@ -46,6 +46,6 @@ pub mod prelude {
         sysvars::{clock::Clock, fees::Fees, rent::Rent, Sysvar},
         ProgramResult,
     };
-    pub use pinocchio_pubkey::declare_id;
     pub use pinocchio_log::{self, *};
+    pub use pinocchio_pubkey::declare_id;
 }

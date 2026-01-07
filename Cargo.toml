@@ -40,5 +40,6 @@ hayabusa-ser-derive = { version = "0.1.0", path = "crates/ser-derive" }
 hayabusa-cpi = { version = "0.1.0", path = "crates/cpi" }
 hayabusa-from-account-infos-derive = { version = "0.1.0", path = "crates/from-account-infos-derive" }
 hayabusa-system-program = { version = "0.1.0", path = "crates/system-program" }
-hayabusa-token = { version = "0.1.0", path = "crates/hayabusa-token" }
-hayabusa-token2022 = { version = "0.1.0", path = "crates/hayabusa-token2022" }
+hayabusa-token = { version = "0.1.0", path = "crates/token" }
+hayabusa-token2022 = { version = "0.1.0", path = "crates/token2022" }
+hayabusa-token-interface = { version = "0.1.0", path = "crates/token-interface" }

@@ -1,6 +1,9 @@
 // Copyright (c) 2025, Arcane Labs <dev@arcane.fi>
 // SPDX-License-Identifier: Apache-2.0
 
+// Copyright (c) 2025, Arcane Labs <dev@arcane.fi>
+// SPDX-License-Identifier: Apache-2.0
+
 use hayabusa_errors::Result;
 use hayabusa_ser::{
     Deserialize, FromBytesUnchecked, RawZcDeserialize, RawZcDeserializeUnchecked, Zc,
@@ -49,7 +52,8 @@ impl Zc for Mint {}
 impl Deserialize for Mint {}
 
 /// SAFETY:
-/// Account data length is validated, account info buffer guaranteed aligned so it is safe to cast from raw ptr.
+/// Account data length is validated, and the Mint struct is properly aligned
+/// so it is safe to cast from raw ptr.
 unsafe impl RawZcDeserialize for Mint {
     fn try_deserialize_raw(account_info: &AccountInfo) -> Result<Ref<Self>> {
         if unlikely(account_info.data_len() != Self::LEN) {
@@ -59,7 +63,7 @@ unsafe impl RawZcDeserialize for Mint {
             );
         }
 
-        if unlikely(!account_info.is_owned_by(&crate::ID)) {
+        if unlikely(!account_info.is_owned_by(&Self::OWNER)) {
             error_msg!(
                 "Mint::try_deserialize_raw: invalid owner",
                 ProgramError::InvalidAccountOwner,

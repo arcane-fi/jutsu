@@ -453,8 +453,28 @@ dependencies = [
 ]
 
 [[package]]
+name = "hayabusa-token-interface"
+version = "0.1.0"
+dependencies = [
+ "hayabusa-accounts",
+ "hayabusa-token",
+ "hayabusa-token2022",
+ "pinocchio",
+]
+
+[[package]]
 name = "hayabusa-token2022"
 version = "0.1.0"
+dependencies = [
+ "hayabusa-accounts",
+ "hayabusa-cpi",
+ "hayabusa-errors",
+ "hayabusa-ser",
+ "hayabusa-utility",
+ "pinocchio",
+ "pinocchio-log",
+ "pinocchio-pubkey",
+]
 
 [[package]]
 name = "hayabusa-utility"

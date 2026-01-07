@@ -19,5 +19,6 @@ pub use initialize_mint2::*;
 pub use mint_to::*;
 pub use mint_to_checked::*;
 pub use set_authority::*;
+pub use thaw_account::*;
 pub use transfer::*;
 pub use transfer_checked::*;

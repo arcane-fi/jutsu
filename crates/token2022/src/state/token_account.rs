@@ -6,7 +6,7 @@ use hayabusa_errors::Result;
 use hayabusa_ser::{
     Deserialize, FromBytesUnchecked, RawZcDeserialize, RawZcDeserializeUnchecked, Zc,
 };
-use hayabusa_utility::{error_msg, OwnerProgram};
+use hayabusa_utility::error_msg;
 use pinocchio::{
     account_info::{AccountInfo, Ref},
     hint::unlikely,
@@ -53,10 +53,6 @@ pub struct TokenAccount {
 
     /// Optional authority to close the account.
     close_authority: Pubkey,
-}
-
-impl OwnerProgram for TokenAccount {
-    const OWNER: Pubkey = crate::ID;
 }
 
 impl FromBytesUnchecked for TokenAccount {}

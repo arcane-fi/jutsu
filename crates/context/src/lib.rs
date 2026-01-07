@@ -61,7 +61,7 @@ where
 }
 
 impl<'ix, T> core::ops::DerefMut for Ctx<'ix, T>
-where 
+where
     T: FromAccountInfos<'ix> + core::ops::Deref<Target = T>,
 {
     #[inline(always)]

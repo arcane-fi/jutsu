@@ -47,10 +47,6 @@ pub fn write_uninit_bytes(destination: &mut [MaybeUninit<u8>], source: &[u8]) {
     // The pointers don't overlap (copy_nonoverlapping requirement)
     // We respect both slice bounds with min()
     unsafe {
-        core::ptr::copy_nonoverlapping(
-            source.as_ptr(),
-            destination.as_mut_ptr() as *mut u8,
-            len,
-        );
+        core::ptr::copy_nonoverlapping(source.as_ptr(), destination.as_mut_ptr() as *mut u8, len);
     }
 }

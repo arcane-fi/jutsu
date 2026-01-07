@@ -5,7 +5,8 @@
 
 mod accounts;
 pub use accounts::{
-    mutable::*, program::*, signer::*, system_account::*, unchecked_account::*, zc_account::*,
+    interface::*, mutable::*, program::*, signer::*, system_account::*, unchecked_account::*,
+    zc_account::*,
 };
 
 use hayabusa_errors::Result;
@@ -34,4 +35,8 @@ pub trait WritableAllowed {}
 
 pub trait ProgramId {
     const ID: Pubkey;
+}
+
+pub trait ProgramIds {
+    const IDS: &'static [Pubkey];
 }
