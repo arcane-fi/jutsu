@@ -17,7 +17,7 @@ pub trait CheckSeeds {
     fn check_pda_seeds_init(addr: &Address, pda_info: Self::InitInfo<'_>) -> Result<(Address, u8)>;
 }
 
-pub fn check_seeds_against_pk(seeds: &[&[u8]], addr: &Address, program_id: &Address) -> Result<()> {
+pub fn check_seeds_against_addr(seeds: &[&[u8]], addr: &Address, program_id: &Address) -> Result<()> {
     let pda_address = try_create_program_address(seeds, program_id)?;
 
     if !address_eq(addr, &pda_address) {
@@ -27,7 +27,7 @@ pub fn check_seeds_against_pk(seeds: &[&[u8]], addr: &Address, program_id: &Addr
     Ok(())
 }
 
-pub fn check_seeds_against_pk_no_bump(
+pub fn check_seeds_against_addr_no_bump(
     seeds: &[&[u8]],
     addr: &Address,
     program_id: &Address,
