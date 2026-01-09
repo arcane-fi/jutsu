@@ -40,7 +40,7 @@ where
 
 impl<'ix, T> DerefMut for Mut<T>
 where 
-    T: FromAccountView<'ix> + WritableAllowed + Deref<Target = T>,
+    T: FromAccountView<'ix> + WritableAllowed,
 {
     #[inline(always)]
     fn deref_mut(&mut self) -> &mut Self::Target {
