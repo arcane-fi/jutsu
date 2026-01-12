@@ -1209,6 +1209,7 @@ name = "hayabusa-accounts"
 version = "0.1.0"
 dependencies = [
  "hayabusa-common",
+ "hayabusa-context",
  "hayabusa-errors",
  "hayabusa-ser",
  "hayabusa-system-program",
@@ -1229,7 +1230,6 @@ dependencies = [
 name = "hayabusa-context"
 version = "0.1.0"
 dependencies = [
- "hayabusa-accounts",
  "hayabusa-common",
  "hayabusa-errors",
  "hayabusa-utility",
@@ -1253,9 +1253,7 @@ dependencies = [
 name = "hayabusa-decode-instruction"
 version = "0.1.0"
 dependencies = [
- "bytemuck",
  "hayabusa-errors",
- "solana-program-error 3.0.0",
 ]
 
 [[package]]
@@ -1363,7 +1361,6 @@ dependencies = [
  "solana-account-view",
  "solana-address",
  "solana-instruction-view",
- "solana-program-error 3.0.0",
 ]
 
 [[package]]

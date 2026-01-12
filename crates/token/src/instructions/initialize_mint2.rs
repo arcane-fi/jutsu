@@ -1,4 +1,4 @@
-// Copyright (c) 2025, Arcane Labs <dev@arcane.fi>
+// Copyright (c) 2026, Arcane Labs <dev@arcane.fi>
 // SPDX-License-Identifier: Apache-2.0
 
 use core::slice::from_raw_parts;
@@ -37,7 +37,7 @@ pub fn initialize_mint2<'ix>(
     // -  [35..67]: freeze_authority (optional, 32 bytes, Address)
     let mut instruction_data = [UNINIT_BYTE; 67];
     let mut length = instruction_data.len();
-
+    
     // Set discriminator as u8 at offset [0]
     write_uninit_bytes(&mut instruction_data, &DISCRIMINATOR);
     // Set decimals as u8 at offset [1]

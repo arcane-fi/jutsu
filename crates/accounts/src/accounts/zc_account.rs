@@ -1,4 +1,4 @@
-// Copyright (c) 2025, Arcane Labs <dev@arcane.fi>
+// Copyright (c) 2026, Arcane Labs <dev@arcane.fi>
 // SPDX-License-Identifier: Apache-2.0
 
 use crate::{FromAccountView, ToAccountView, WritableAllowed};

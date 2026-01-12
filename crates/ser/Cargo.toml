@@ -9,11 +9,9 @@ rust-version.workspace = true
 description = "Hayabusa serialization utils"
 
 [features]
-std = ["dep:borsh"]
 
 [dependencies]
 pinocchio-log.workspace = true
-borsh = { workspace = true, optional = true }
 bytemuck.workspace = true
 hayabusa-discriminator.workspace = true
 hayabusa-utility.workspace = true
@@ -23,4 +21,3 @@ hayabusa-system-program.workspace = true
 solana-account-view.workspace = true
 solana-address.workspace = true
 solana-instruction-view = { workspace = true, features = ["cpi"] }
-solana-program-error.workspace = true

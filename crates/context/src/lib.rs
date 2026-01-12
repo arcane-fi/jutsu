@@ -1,4 +1,4 @@
-// Copyright (c) 2025, Arcane Labs <dev@arcane.fi>
+// Copyright (c) 2026, Arcane Labs <dev@arcane.fi>
 // SPDX-License-Identifier: Apache-2.0
 
 #![no_std]
@@ -72,14 +72,19 @@ where
 
 #[derive(Clone)]
 pub struct AccountIter<'ix> {
-    slice: &'ix [AccountView],
-    index: usize,
+    pub(crate) slice: &'ix [AccountView],
+    pub(crate) index: usize,
 }
 
 impl<'ix> AccountIter<'ix> {
     #[inline(always)]
     pub fn new(slice: &'ix [AccountView]) -> Self {
         Self { slice, index: 0 }
+    }
+
+    #[inline(always)]
+    pub fn index(&self) -> usize {
+        self.index
     }
 
     #[allow(clippy::should_implement_trait)]
@@ -101,5 +106,58 @@ impl<'ix> AccountIter<'ix> {
     #[inline(always)]
     pub fn into_subslice(&self) -> &[AccountView] {
         &self.slice[self.index..]
+    }
+}
+
+pub struct AccountPeek<'ix> {
+    slice: &'ix [AccountView],
+    index: usize,
+}
+
+impl<'ix> From<&AccountIter<'ix>> for AccountPeek<'ix> {
+    #[inline(always)]
+    fn from(iter: &AccountIter<'ix>) -> AccountPeek<'ix> {
+        AccountPeek {
+            slice: iter.slice,
+            index: iter.index,
+        }
+    }
+}
+
+impl<'ix> From<&mut AccountIter<'ix>> for AccountPeek<'ix> {
+    #[inline(always)]
+    fn from(iter: &mut AccountIter<'ix>) -> AccountPeek<'ix> {
+        AccountPeek {
+            slice: iter.slice,
+            index: iter.index,
+        }
+    }
+}
+
+impl<'ix> AccountPeek<'ix> {
+    #[inline(always)]
+    pub fn set_index(&mut self, index: usize) -> Result<()> {
+        if unlikely(index >= self.slice.len()) {
+            error_msg!(
+                "AccountPeek::set_index: index out of bounds.",
+                ErrorCode::InvalidIndex,
+            );
+        }
+
+        self.index = index;
+         
+        Ok(())
+    }
+
+    #[inline(always)]
+    pub fn peek(&self, offset: usize) -> Result<&'ix AccountView> {
+        if unlikely(self.index + offset >= self.slice.len()) {
+            error_msg!(
+                "AccountPeek::peek: index out of bounds.",
+                ErrorCode::InvalidIndex,
+            );
+        }
+
+        Ok(&self.slice[self.index + offset])
     }
 }

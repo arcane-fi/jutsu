@@ -10,7 +10,6 @@ description = "Hayabusa context"
 
 [dependencies]
 pinocchio-log.workspace = true
-hayabusa-accounts.workspace = true
 hayabusa-errors.workspace = true
 hayabusa-utility.workspace = true
 hayabusa-common.workspace = true

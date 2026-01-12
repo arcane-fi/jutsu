@@ -111,3 +111,41 @@ fn pack_zc_account<T: bytemuck::NoUninit + Discriminator>(account: T) -> Vec<u8>
 struct CounterAccount {
     counter: u64,
 }
+
+#[test]
+fn integration3() {
+    let mut svm = LiteSVM::new();
+
+    let program_bytes = include_bytes!("../../target/deploy/counter_program.so");
+
+    let program_id = pubkey!("HPoDm7Kf63B6TpFKV7S8YSd7sGde6sVdztiDBEVkfuxz");
+
+    svm.add_program(program_id, program_bytes);
+
+    let keypair = Keypair::new();
+    let user = keypair.pubkey();
+
+    let target_keypair = Keypair::new();
+    let target = target_keypair.pubkey();
+
+    svm.airdrop(&user, 1_000_000_000_000).unwrap();
+
+    let ix_data = {
+        const INITIALIZE_COUNTER_DISCRIMINATOR: [u8; 8] = [70, 103, 157, 50, 99, 187, 4, 24];
+        let data = INITIALIZE_COUNTER_DISCRIMINATOR.to_vec();
+        data
+    };
+
+    let ix = Instruction {
+        program_id,
+        accounts: vec![],
+        data: ix_data,
+    };
+
+    let tx = Transaction::new_signed_with_payer(&[ix], Some(&user), &[&keypair], svm.latest_blockhash());
+
+    let res = svm.send_transaction(tx);
+
+    println!("Transaction result: {:#?}", res);
+
+}

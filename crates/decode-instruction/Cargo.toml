@@ -10,5 +10,3 @@ description.workspace = true
 
 [dependencies]
 hayabusa-errors.workspace = true
-bytemuck.workspace = true
-solana-program-error.workspace = true

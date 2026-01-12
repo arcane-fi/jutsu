@@ -13,7 +13,6 @@ rust-version = "1.82"
 description = "Hayabusa: lightweight Solana runtime library."
 
 [workspace.dependencies]
-borsh = { version = "1.5", features = ["derive"] }
 bytemuck = "1.21.0"
 pinocchio-log = "0.5.1"
 sha2 = "0.10"

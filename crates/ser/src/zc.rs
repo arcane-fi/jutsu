@@ -1,17 +1,16 @@
-// Copyright (c) 2025, Arcane Labs <dev@arcane.fi>
+// Copyright (c) 2026, Arcane Labs <dev@arcane.fi>
 // SPDX-License-Identifier: Apache-2.0
 
 use super::{Deserialize, DeserializeMut, Zc};
 use bytemuck::{AnyBitPattern, Pod};
 use hayabusa_cpi::CpiCtx;
 use hayabusa_discriminator::Discriminator;
-use hayabusa_errors::{ErrorCode, Result};
+use hayabusa_errors::{ErrorCode, Result, ProgramError};
 use hayabusa_system_program::instructions::{create_account, CreateAccount};
 use hayabusa_utility::{error_msg, Len, OwnerProgram, hint::unlikely};
 use solana_account_view::{AccountView, Ref, RefMut};
 use solana_address::Address;
 use solana_instruction_view::cpi::Signer;
-use solana_program_error::ProgramError;
 
 /// # Safety
 /// You must ensure proper alignment of Self

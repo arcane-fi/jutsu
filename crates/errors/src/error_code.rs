@@ -1,4 +1,4 @@
-// Copyright (c) 2025, Arcane Labs <dev@arcane.fi>
+// Copyright (c) 2026, Arcane Labs <dev@arcane.fi>
 // SPDX-License-Identifier: Apache-2.0
 
 use solana_program_error::ProgramError;
@@ -16,6 +16,7 @@ pub enum ErrorCode {
     SyscallFailed,
     SeedsTooLong,
     TooManySeeds,
+    InvalidIndex,
 }
 
 impl TryFrom<u32> for ErrorCode {
@@ -34,6 +35,7 @@ impl TryFrom<u32> for ErrorCode {
             110 => Ok(ErrorCode::SyscallFailed),
             111 => Ok(ErrorCode::SeedsTooLong),
             112 => Ok(ErrorCode::TooManySeeds),
+            113 => Ok(ErrorCode::InvalidIndex),
             _ => Err(ProgramError::InvalidArgument),
         }
     }

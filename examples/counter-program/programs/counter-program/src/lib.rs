@@ -1,7 +1,6 @@
 #![no_std]
 #![allow(dead_code, unexpected_cfgs)]
 
-use bytemuck::{Pod, Zeroable};
 use hayabusa::prelude::*;
 
 declare_id!("HPoDm7Kf63B6TpFKV7S8YSd7sGde6sVdztiDBEVkfuxz");
@@ -23,16 +22,33 @@ mod entrypoint {
             program_id,
             instruction_data,
             accounts,
-            UpdateCounterInstruction => update_counter(amount),
-            InitializeCounterInstruction => initialize_counter(),
+            UpdateCounterIx => update_counter(amount),
+            InitializeCounterIx => initialize_counter(),
+            NoOpIx => noop(),
         );
     }
 }
 
-#[derive(Clone, Copy, Pod, Zeroable, Discriminator)]
+#[derive(Clone, Copy, Discriminator)]
 #[repr(C)]
-struct UpdateCounterInstruction {
+struct UpdateCounterIx {
     amount: u64, // field name must map identically to the instruction param name, and be in the same order.
+}
+
+impl<'ix> DecodeIx<'ix> for UpdateCounterIx {
+    #[inline(always)]
+    fn decode(instruction_data: &'ix [u8]) -> Result<Self> {
+        if unlikely(instruction_data.len() != 8) {
+            error_msg!(
+                "Invalid instruction data length",
+                ProgramError::InvalidInstructionData,
+            );
+        }
+
+        Ok(Self {
+            amount: unsafe { core::ptr::read_unaligned(instruction_data.as_ptr() as *const u64) }
+        })
+    }
 }
 
 fn update_counter<'ix>(ctx: Ctx<'ix, UpdateCounter<'ix>>, amount: u64) -> Result<()> {
@@ -62,9 +78,15 @@ impl<'ix> FromAccountViews<'ix> for UpdateCounter<'ix> {
     }
 }
 
-#[derive(Clone, Copy, Pod, Zeroable, Discriminator)]
+#[derive(Clone, Copy, Discriminator)]
 #[repr(C)]
-struct InitializeCounterInstruction {}
+struct InitializeCounterIx {}
+
+impl<'ix> DecodeIx<'ix> for InitializeCounterIx {
+    fn decode(_: &'ix [u8]) -> Result<Self> {
+        Ok(Self {})
+    }
+}
 
 fn initialize_counter<'ix>(ctx: Ctx<'ix, InitializeCounter<'ix>>) -> Result<()> {
     // account is zeroed on init
@@ -85,6 +107,28 @@ pub struct InitializeCounter<'ix> {
     pub user: Mut<Signer<'ix>>,
     pub counter: Mut<ZcAccount<'ix, CounterAccount>>,
     pub system_program: Program<'ix, System>,
+}
+
+#[derive(Clone, Copy, Discriminator)]
+#[repr(C)]
+struct NoOpIx {}
+
+impl<'ix> DecodeIx<'ix> for NoOpIx {
+    fn decode(_: &'ix [u8]) -> Result<Self> {
+        Ok(Self {})
+    }
+}
+
+fn noop<'ix>(_: Ctx<'ix, NoOp>) -> Result<()> {
+    Ok(())
+}
+
+pub struct NoOp {}
+
+impl<'ix> FromAccountViews<'ix> for NoOp {
+    fn try_from_account_views(_: &mut AccountIter<'ix>) -> Result<Self> {
+        Ok(NoOp {})
+    }
 }
 
 #[account]
