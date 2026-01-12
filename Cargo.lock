@@ -453,13 +453,11 @@ dependencies = [
 name = "hayabusa-sysvars"
 version = "0.1.0"
 dependencies = [
+ "hayabusa-common",
  "hayabusa-errors",
  "hayabusa-syscalls",
  "hayabusa-utility",
- "solana-account-view",
- "solana-address",
  "solana-instruction-view",
- "solana-program-error",
 ]
 
 [[package]]

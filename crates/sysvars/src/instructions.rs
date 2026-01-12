@@ -4,9 +4,8 @@
 //! Attribution: https://github.com/anza-xyz/pinocchio/blob/main/sdk/src/sysvars/instructions.rs
 
 use core::{marker::PhantomData, mem::size_of, ops::Deref};
-use solana_account_view::{AccountView, Ref};
-use solana_address::{Address, ADDRESS_BYTES};
-use solana_program_error::ProgramError;
+use hayabusa_common::{AccountView, Address, Ref, ADDRESS_BYTES};
+use hayabusa_errors::ProgramError;
 
 /// Instructions sysvar ID `Sysvar1nstructions1111111111111111111111111`.
 pub const INSTRUCTIONS_ID: Address = Address::new_from_array([

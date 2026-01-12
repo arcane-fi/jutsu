@@ -4,4 +4,4 @@
 #![no_std]
 
 pub use solana_account_view::{AccountView, Ref, RefMut, self as account_view};
-pub use solana_address::{Address, address_eq, address, declare_id};
+pub use solana_address::{Address, address_eq, address, declare_id, ADDRESS_BYTES};

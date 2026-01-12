@@ -11,10 +11,8 @@
 
 use crate::{Sysvar, impl_sysvar_get};
 use hayabusa_utility::hint::unlikely;
-use hayabusa_errors::Result;
-use solana_account_view::{AccountView, Ref};
-use solana_address::Address;
-use solana_program_error::ProgramError;
+use hayabusa_errors::{ProgramError, Result};
+use hayabusa_common::{AccountView, Address, Ref};
 use core::mem::{align_of, size_of};
 
 /// The ID of the rent sysvar.

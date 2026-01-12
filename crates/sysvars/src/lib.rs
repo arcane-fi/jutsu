@@ -4,14 +4,14 @@
 #![no_std]
 #![allow(unexpected_cfgs)]
 
+pub mod clock;
 pub mod instructions;
 pub mod rent;
 
-use hayabusa_errors::Result;
+use hayabusa_errors::{ProgramError, Result};
 #[cfg(any(target_os = "solana", target_arch = "bpf"))]
 use hayabusa_syscalls::sol_get_sysvar;
-use solana_address::Address;
-use solana_program_error::ProgramError;
+use hayabusa_common::Address;
 #[cfg(not(any(target_os = "solana", target_arch = "bpf")))]
 use core::hint::black_box;
 
@@ -108,13 +108,13 @@ macro_rules! impl_sysvar_get {
                     Ok(unsafe { var.assume_init() })
                 }
                 $crate::OFFSET_LENGTH_EXCEEDS_SYSVAR => {
-                    Err(solana_program_error::ProgramError::InvalidArgument)
+                    Err(ProgramError::InvalidArgument)
                 }
                 $crate::SYSVAR_NOT_FOUND => {
-                    Err(solana_program_error::ProgramError::UnsupportedSysvar)
+                    Err(ProgramError::UnsupportedSysvar)
                 }
                 // Unexpected errors are folded into `UnsupportedSysvar`.
-                _ => Err(solana_program_error::ProgramError::UnsupportedSysvar),
+                _ => Err(ProgramError::UnsupportedSysvar),
             }
         }
     };
