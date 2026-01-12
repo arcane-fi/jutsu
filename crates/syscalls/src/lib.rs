@@ -4,19 +4,15 @@
 #![no_std]
 #![allow(unexpected_cfgs)] // silence warning about target_os = "solana"
 
+use hayabusa_errors::{ErrorCode, Result};
 use solana_address::Address;
-use hayabusa_errors::{Result, ErrorCode};
 pub use solana_define_syscall::definitions::*;
 
 pub const MAX_SEEDS: usize = 16;
 pub const MAX_SEED_LEN: usize = 32;
 pub const MAX_TOTAL_LEN: usize = MAX_SEEDS * MAX_SEED_LEN; // 512
 
-
-pub fn try_find_program_address(
-    seeds: &[&[u8]],
-    program_id: &Address,
-) -> Result<(Address, u8)> {
+pub fn try_find_program_address(seeds: &[&[u8]], program_id: &Address) -> Result<(Address, u8)> {
     let mut seed_buf = [0u8; MAX_TOTAL_LEN];
     let seed_len = flatten_seeds_raw(seeds, &mut seed_buf)?;
 
@@ -40,10 +36,7 @@ pub fn try_find_program_address(
     }
 }
 
-pub fn try_create_program_address(
-    seeds: &[&[u8]],
-    program_id: &Address,
-) -> Result<Address> {
+pub fn try_create_program_address(seeds: &[&[u8]], program_id: &Address) -> Result<Address> {
     let mut seed_buf = [0u8; MAX_TOTAL_LEN];
     let seed_len = flatten_seeds_raw(seeds, &mut seed_buf)?;
 
@@ -73,10 +66,7 @@ pub fn try_create_program_address(
 /// - bounds checked
 /// - no overlapping writes
 /// - no out-of-bounds reads
-pub fn flatten_seeds_raw(
-    seeds: &[&[u8]],
-    out: &mut [u8; MAX_TOTAL_LEN],
-) -> Result<usize> {
+pub fn flatten_seeds_raw(seeds: &[&[u8]], out: &mut [u8; MAX_TOTAL_LEN]) -> Result<usize> {
     if seeds.len() > MAX_SEEDS {
         return Err(ErrorCode::TooManySeeds.into());
     }
@@ -94,8 +84,8 @@ pub fn flatten_seeds_raw(
 
         unsafe {
             core::ptr::copy_nonoverlapping(
-                seed.as_ptr(),                 // src
-                out.as_mut_ptr().add(offset),  // dst
+                seed.as_ptr(),                // src
+                out.as_mut_ptr().add(offset), // dst
                 len,
             );
         }

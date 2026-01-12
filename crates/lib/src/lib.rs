@@ -4,7 +4,10 @@
 #![cfg_attr(not(feature = "std"), no_std)]
 
 pub mod instruction {
-    pub use solana_instruction_view::{InstructionAccount, InstructionView, seeds, cpi::{Seed, Signer as PdaSigner}};
+    pub use solana_instruction_view::{
+        cpi::{Seed, Signer as PdaSigner},
+        seeds, InstructionAccount, InstructionView,
+    };
 }
 
 pub mod system_program {
@@ -30,15 +33,11 @@ pub mod prelude {
     pub use hayabusa_pda::*;
     pub use hayabusa_ser::*;
     pub use hayabusa_ser_derive::*;
-    pub use hayabusa_utility::{take_bytes, hint::unlikely, *};
+    pub use hayabusa_utility::{hint::unlikely, take_bytes, *};
 
-    pub use hayabusa_entrypoint::{
-        self,
-        program_entrypoint,
-        no_allocator,
-    };
     #[cfg(feature = "std")]
     pub use hayabusa_entrpouint::default_panic_handler;
+    pub use hayabusa_entrypoint::{self, no_allocator, program_entrypoint};
 
     #[cfg(not(feature = "std"))]
     pub use hayabusa_entrypoint::nostd_panic_handler;
@@ -48,9 +47,9 @@ pub mod prelude {
     pub use hayabusa_syscalls as syscalls;
     pub use hayabusa_sysvars::{self as sysvars, clock::Clock, Sysvar};
 
-    pub use solana_account_view::{AccountView, Ref, RefMut, self as account_view};
-    pub use solana_address::{Address, declare_id, self as address};
+    pub use solana_account_view::{self as account_view, AccountView, Ref, RefMut};
+    pub use solana_address::{self as address, declare_id, Address};
     pub use solana_program_error::ProgramError;
-    
+
     pub use pinocchio_log::{self, *};
 }

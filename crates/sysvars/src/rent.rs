@@ -9,11 +9,11 @@
 // It can be removed once the implementation uses `get_sysvar` instead.
 #![allow(deprecated)]
 
-use crate::{Sysvar, impl_sysvar_get};
-use hayabusa_utility::hint::unlikely;
-use hayabusa_errors::{ProgramError, Result};
-use hayabusa_common::{AccountView, Address, Ref};
+use crate::{impl_sysvar_get, Sysvar};
 use core::mem::{align_of, size_of};
+use hayabusa_common::{AccountView, Address, Ref};
+use hayabusa_errors::{ProgramError, Result};
+use hayabusa_utility::hint::unlikely;
 
 /// The ID of the rent sysvar.
 pub const RENT_ID: Address = Address::new_from_array([
@@ -109,9 +109,7 @@ impl Rent {
     /// The caller must ensure that it is safe to borrow the account data - e.g., there are
     /// no mutable borrows of the account data.
     #[inline]
-    pub unsafe fn from_account_view_unchecked(
-        account_view: &AccountView,
-    ) -> Result<&Self> {
+    pub unsafe fn from_account_view_unchecked(account_view: &AccountView) -> Result<&Self> {
         if unlikely(account_view.address() != &RENT_ID) {
             return Err(ProgramError::InvalidArgument);
         }

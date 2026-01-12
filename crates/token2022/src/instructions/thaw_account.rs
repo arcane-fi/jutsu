@@ -1,10 +1,13 @@
 // Copyright (c) 2026, Arcane Labs <dev@arcane.fi>
 // SPDX-License-Identifier: Apache-2.0
 
+use hayabusa_common::{AccountView, Address};
 use hayabusa_cpi::{CheckProgramId, CpiCtx};
 use hayabusa_errors::Result;
-use hayabusa_common::{AccountView, Address};
-use solana_instruction_view::{InstructionAccount, InstructionView, cpi::{invoke, invoke_signed}};
+use solana_instruction_view::{
+    cpi::{invoke, invoke_signed},
+    InstructionAccount, InstructionView,
+};
 
 pub struct ThawAccount<'ix> {
     /// Token account to thaw

@@ -3,9 +3,9 @@
 
 use crate::{FromAccountView, ProgramIds, ToAccountView};
 use core::ops::Deref;
-use hayabusa_errors::{ErrorCode, Result, ProgramError};
-use hayabusa_utility::{error_msg, hint::unlikely};
 use hayabusa_common::AccountView;
+use hayabusa_errors::{ErrorCode, ProgramError, Result};
+use hayabusa_utility::{error_msg, hint::unlikely};
 
 pub struct Interface<'ix, T>
 where
@@ -21,6 +21,13 @@ where
 {
     #[inline(always)]
     fn try_from_account_view(account_view: &'ix AccountView) -> Result<Self> {
+        if unlikely(!account_view.executable()) {
+            error_msg!(
+                "Interface::try_from_account_view: program account is not executable.",
+                ErrorCode::ProgramAccountNotExecutable,
+            );
+        }
+
         if unlikely(!T::IDS.contains(account_view.address())) {
             error_msg!(
                 "Interface::try_from_account_view: program ID mismatch",

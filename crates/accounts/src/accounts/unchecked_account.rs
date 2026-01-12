@@ -2,8 +2,8 @@
 // SPDX-License-Identifier: Apache-2.0
 
 use crate::{FromAccountView, ToAccountView, WritableAllowed};
-use hayabusa_errors::Result;
 use hayabusa_common::AccountView;
+use hayabusa_errors::Result;
 
 pub struct UncheckedAccount<'ix> {
     pub account_view: &'ix AccountView,

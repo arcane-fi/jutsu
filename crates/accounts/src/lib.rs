@@ -9,8 +9,8 @@ pub use accounts::{
     zc_account::*,
 };
 
-use hayabusa_errors::Result;
 use hayabusa_common::{AccountView, Address};
+use hayabusa_errors::Result;
 
 pub trait FromAccountView<'ix>: Sized {
     fn try_from_account_view(account_view: &'ix AccountView) -> Result<Self>;

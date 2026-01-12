@@ -2,11 +2,14 @@
 // SPDX-License-Identifier: Apache-2.0
 
 use core::slice::from_raw_parts;
+use hayabusa_common::{AccountView, Address};
 use hayabusa_cpi::{CheckProgramId, CpiCtx};
 use hayabusa_errors::Result;
 use hayabusa_utility::{write_uninit_bytes, UNINIT_BYTE};
-use hayabusa_common::{AccountView, Address};
-use solana_instruction_view::{InstructionAccount, InstructionView, cpi::{invoke, invoke_signed}};
+use solana_instruction_view::{
+    cpi::{invoke, invoke_signed},
+    InstructionAccount, InstructionView,
+};
 
 pub struct InitializeMint2<'ix> {
     /// Mint account
@@ -37,7 +40,7 @@ pub fn initialize_mint2<'ix>(
     // -  [35..67]: freeze_authority (optional, 32 bytes, Address)
     let mut instruction_data = [UNINIT_BYTE; 67];
     let mut length = instruction_data.len();
-    
+
     // Set discriminator as u8 at offset [0]
     write_uninit_bytes(&mut instruction_data, &DISCRIMINATOR);
     // Set decimals as u8 at offset [1]

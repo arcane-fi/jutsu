@@ -8,12 +8,12 @@ pub mod clock;
 pub mod instructions;
 pub mod rent;
 
+#[cfg(not(any(target_os = "solana", target_arch = "bpf")))]
+use core::hint::black_box;
+use hayabusa_common::Address;
 use hayabusa_errors::{ProgramError, Result};
 #[cfg(any(target_os = "solana", target_arch = "bpf"))]
 use hayabusa_syscalls::sol_get_sysvar;
-use hayabusa_common::Address;
-#[cfg(not(any(target_os = "solana", target_arch = "bpf")))]
-use core::hint::black_box;
 
 /// Return value indicating that the `offset + length` is greater than the length of
 /// the sysvar data.
@@ -107,12 +107,8 @@ macro_rules! impl_sysvar_get {
                     // padding bytes are set to zero.
                     Ok(unsafe { var.assume_init() })
                 }
-                $crate::OFFSET_LENGTH_EXCEEDS_SYSVAR => {
-                    Err(ProgramError::InvalidArgument)
-                }
-                $crate::SYSVAR_NOT_FOUND => {
-                    Err(ProgramError::UnsupportedSysvar)
-                }
+                $crate::OFFSET_LENGTH_EXCEEDS_SYSVAR => Err(ProgramError::InvalidArgument),
+                $crate::SYSVAR_NOT_FOUND => Err(ProgramError::UnsupportedSysvar),
                 // Unexpected errors are folded into `UnsupportedSysvar`.
                 _ => Err(ProgramError::UnsupportedSysvar),
             }

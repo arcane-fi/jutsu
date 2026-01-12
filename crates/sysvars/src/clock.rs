@@ -3,7 +3,7 @@
 
 //! Attribution: https://github.com/anza-xyz/pinocchio/blob/91ae743491e7f768b91662f442119c6caef640f4/sdk/src/sysvars/clock.rs
 
-use crate::{Sysvar, impl_sysvar_get};
+use crate::{impl_sysvar_get, Sysvar};
 use hayabusa_common::{AccountView, Address, Ref};
 use hayabusa_errors::{ProgramError, Result};
 use hayabusa_utility::hint::unlikely;
@@ -105,9 +105,7 @@ impl Clock {
     /// The caller must ensure that it is safe to borrow the account data - e.g., there are
     /// no mutable borrows of the account data.
     #[inline]
-    pub unsafe fn from_account_view_unchecked(
-        account_view: &AccountView,
-    ) -> Result<&Self> {
+    pub unsafe fn from_account_view_unchecked(account_view: &AccountView) -> Result<&Self> {
         if unlikely(account_view.address() != &CLOCK_ID) {
             return Err(ProgramError::InvalidArgument);
         }

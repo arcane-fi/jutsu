@@ -3,7 +3,7 @@
 
 use hayabusa_errors::{ErrorCode, Result};
 use hayabusa_syscalls::{try_create_program_address, try_find_program_address};
-use solana_address::{Address, address_eq};
+use solana_address::{address_eq, Address};
 use solana_program_error::ProgramError;
 
 pub trait CheckSeeds {
@@ -17,7 +17,11 @@ pub trait CheckSeeds {
     fn check_pda_seeds_init(addr: &Address, pda_info: Self::InitInfo<'_>) -> Result<(Address, u8)>;
 }
 
-pub fn check_seeds_against_addr(seeds: &[&[u8]], addr: &Address, program_id: &Address) -> Result<()> {
+pub fn check_seeds_against_addr(
+    seeds: &[&[u8]],
+    addr: &Address,
+    program_id: &Address,
+) -> Result<()> {
     let pda_address = try_create_program_address(seeds, program_id)?;
 
     if !address_eq(addr, &pda_address) {

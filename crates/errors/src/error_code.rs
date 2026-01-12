@@ -17,6 +17,7 @@ pub enum ErrorCode {
     SeedsTooLong,
     TooManySeeds,
     InvalidIndex,
+    ProgramAccountNotExecutable,
 }
 
 impl TryFrom<u32> for ErrorCode {
@@ -36,6 +37,7 @@ impl TryFrom<u32> for ErrorCode {
             111 => Ok(ErrorCode::SeedsTooLong),
             112 => Ok(ErrorCode::TooManySeeds),
             113 => Ok(ErrorCode::InvalidIndex),
+            114 => Ok(ErrorCode::ProgramAccountNotExecutable),
             _ => Err(ProgramError::InvalidArgument),
         }
     }

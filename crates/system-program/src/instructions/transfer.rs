@@ -5,7 +5,10 @@ use hayabusa_cpi::{CheckProgramId, CpiCtx};
 use hayabusa_errors::Result;
 use solana_account_view::AccountView;
 use solana_address::Address;
-use solana_instruction_view::{InstructionAccount, InstructionView, cpi::{invoke, invoke_signed}};
+use solana_instruction_view::{
+    cpi::{invoke, invoke_signed},
+    InstructionAccount, InstructionView,
+};
 
 pub struct Transfer<'ix> {
     /// Funding account

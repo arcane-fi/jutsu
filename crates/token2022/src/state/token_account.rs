@@ -2,12 +2,12 @@
 // SPDX-License-Identifier: Apache-2.0
 
 use super::AccountState;
-use hayabusa_errors::{Result, ProgramError};
+use hayabusa_common::{AccountView, Address, Ref};
+use hayabusa_errors::{ProgramError, Result};
 use hayabusa_ser::{
     Deserialize, FromBytesUnchecked, RawZcDeserialize, RawZcDeserializeUnchecked, Zc,
 };
 use hayabusa_utility::{error_msg, hint::unlikely};
-use hayabusa_common::{AccountView, Address, Ref};
 
 /// Token account data.
 #[repr(C)]
@@ -94,9 +94,7 @@ impl RawZcDeserializeUnchecked for TokenAccount {
             );
         }
 
-        Ok(Self::from_bytes_unchecked(
-            account_view.borrow_unchecked(),
-        ))
+        Ok(Self::from_bytes_unchecked(account_view.borrow_unchecked()))
     }
 }
 

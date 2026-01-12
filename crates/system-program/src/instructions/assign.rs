@@ -3,9 +3,12 @@
 
 use hayabusa_cpi::{CheckProgramId, CpiCtx};
 use hayabusa_errors::Result;
-use solana_instruction_view::{InstructionAccount, InstructionView, cpi::{invoke, invoke_signed}};
 use solana_account_view::AccountView;
 use solana_address::Address;
+use solana_instruction_view::{
+    cpi::{invoke, invoke_signed},
+    InstructionAccount, InstructionView,
+};
 
 pub struct Assign<'ix> {
     /// Account to be assigned to a program
@@ -19,7 +22,9 @@ impl CheckProgramId for Assign<'_> {
 #[inline(always)]
 pub fn assign<'ix>(cpi_ctx: CpiCtx<'ix, '_, '_, '_, Assign<'ix>>, owner: &Address) -> Result<()> {
     let account_views = [cpi_ctx.account];
-    let instruction_accounts = [InstructionAccount::writable_signer(cpi_ctx.account.address())];
+    let instruction_accounts = [InstructionAccount::writable_signer(
+        cpi_ctx.account.address(),
+    )];
 
     // ix data
     // - [0..4]: discriminator

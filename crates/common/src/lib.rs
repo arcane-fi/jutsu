@@ -3,5 +3,5 @@
 
 #![no_std]
 
-pub use solana_account_view::{AccountView, Ref, RefMut, self as account_view};
-pub use solana_address::{Address, address_eq, address, declare_id, ADDRESS_BYTES};
+pub use solana_account_view::{self as account_view, AccountView, Ref, RefMut};
+pub use solana_address::{address, address_eq, declare_id, Address, ADDRESS_BYTES};

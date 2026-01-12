@@ -1,12 +1,12 @@
 // Copyright (c) 2026, Arcane Labs <dev@arcane.fi>
 // SPDX-License-Identifier: Apache-2.0
 
+use hayabusa_common::{AccountView, Address, Ref};
 use hayabusa_errors::{ProgramError, Result};
 use hayabusa_ser::{
     Deserialize, FromBytesUnchecked, RawZcDeserialize, RawZcDeserializeUnchecked, Zc,
 };
-use hayabusa_utility::{error_msg, OwnerProgram, hint::unlikely};
-use hayabusa_common::{AccountView, Address, Ref};
+use hayabusa_utility::{error_msg, hint::unlikely, OwnerProgram};
 
 pub const MAX_MULTISIG_SIGNERS: usize = 11;
 
@@ -69,9 +69,7 @@ impl RawZcDeserializeUnchecked for Multisig {
             );
         }
 
-        Ok(Self::from_bytes_unchecked(
-            account_view.borrow_unchecked(),
-        ))
+        Ok(Self::from_bytes_unchecked(account_view.borrow_unchecked()))
     }
 }
 

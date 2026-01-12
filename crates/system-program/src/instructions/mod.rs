@@ -12,7 +12,7 @@ pub use create_account::*;
 pub use transfer::*;
 
 use hayabusa_errors::Result;
-use hayabusa_sysvars::{Sysvar, rent::Rent};
+use hayabusa_sysvars::{rent::Rent, Sysvar};
 
 fn minimum_balance(space: usize) -> Result<u64> {
     let rent = Rent::get()?;

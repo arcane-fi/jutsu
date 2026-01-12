@@ -3,9 +3,9 @@
 
 use crate::{FromAccountView, WritableAllowed};
 use core::ops::{Deref, DerefMut};
-use hayabusa_errors::{ErrorCode, Result, ProgramError};
-use hayabusa_utility::{error_msg, hint::unlikely};
 use hayabusa_common::AccountView;
+use hayabusa_errors::{ErrorCode, ProgramError, Result};
+use hayabusa_utility::{error_msg, hint::unlikely};
 
 pub struct Mut<T>(pub T);
 
@@ -39,7 +39,7 @@ where
 }
 
 impl<'ix, T> DerefMut for Mut<T>
-where 
+where
     T: FromAccountView<'ix> + WritableAllowed,
 {
     #[inline(always)]

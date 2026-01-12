@@ -12,8 +12,8 @@ use core::{
     ptr::with_exposed_provenance_mut,
     slice::from_raw_parts,
 };
-use solana_address::Address;
 use solana_account_view::{AccountView, RuntimeAccount, MAX_PERMITTED_DATA_INCREASE};
+use solana_address::Address;
 use solana_program_error::ProgramError;
 
 #[cfg(feature = "alloc")]
@@ -591,8 +591,7 @@ macro_rules! no_allocator {
 
             // Assert if the allocation does not exceed the heap size.
             assert!(
-                end <= $crate::HEAP_START_ADDRESS as usize
-                    + $crate::MAX_HEAP_LENGTH as usize,
+                end <= $crate::HEAP_START_ADDRESS as usize + $crate::MAX_HEAP_LENGTH as usize,
                 "allocation exceeds heap size"
             );
 
@@ -636,12 +635,12 @@ unsafe impl GlobalAlloc for NoAllocator {
 #[cfg(feature = "alloc")]
 mod alloc {
     use super::MAX_HEAP_LENGTH;
-    use hayabusa_utility::hint::unlikely;
     use core::{
         alloc::{GlobalAlloc, Layout},
         mem::size_of,
         ptr::null_mut,
     };
+    use hayabusa_utility::hint::unlikely;
 
     /// The bump allocator used as the default Rust heap when running programs.
     ///

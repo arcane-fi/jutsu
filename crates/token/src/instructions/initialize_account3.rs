@@ -2,11 +2,14 @@
 // SPDX-License-Identifier: Apache-2.0
 
 use core::slice::from_raw_parts;
+use hayabusa_common::{AccountView, Address};
 use hayabusa_cpi::{CheckProgramId, CpiCtx};
 use hayabusa_errors::Result;
 use hayabusa_utility::{write_uninit_bytes, UNINIT_BYTE};
-use hayabusa_common::{AccountView, Address};
-use solana_instruction_view::{InstructionAccount, InstructionView, cpi::{invoke, invoke_signed}};
+use solana_instruction_view::{
+    cpi::{invoke, invoke_signed},
+    InstructionAccount, InstructionView,
+};
 
 pub struct InitializeAccount3<'ix> {
     /// New account

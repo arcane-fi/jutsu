@@ -3,8 +3,8 @@
 
 #![no_std]
 
-use hayabusa_errors::{ErrorCode, Result, ProgramError};
-use hayabusa_utility::{error_msg, write_uninit_bytes, UNINIT_BYTE, hint::unlikely};
+use hayabusa_errors::{ErrorCode, ProgramError, Result};
+use hayabusa_utility::{error_msg, hint::unlikely, write_uninit_bytes, UNINIT_BYTE};
 use solana_account_view::AccountView;
 
 pub trait Discriminator {

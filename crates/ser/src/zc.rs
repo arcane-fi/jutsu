@@ -5,9 +5,9 @@ use super::{Deserialize, DeserializeMut, Zc};
 use bytemuck::{AnyBitPattern, Pod};
 use hayabusa_cpi::CpiCtx;
 use hayabusa_discriminator::Discriminator;
-use hayabusa_errors::{ErrorCode, Result, ProgramError};
+use hayabusa_errors::{ErrorCode, ProgramError, Result};
 use hayabusa_system_program::instructions::{create_account, CreateAccount};
-use hayabusa_utility::{error_msg, Len, OwnerProgram, hint::unlikely};
+use hayabusa_utility::{error_msg, hint::unlikely, Len, OwnerProgram};
 use solana_account_view::{AccountView, Ref, RefMut};
 use solana_address::Address;
 use solana_instruction_view::cpi::Signer;
@@ -87,10 +87,9 @@ where
             );
         }
 
-        Ok(RefMut::map(
-            account_view.try_borrow_mut()?,
-            |d| unsafe { T::from_bytes_unchecked_mut(&mut d[8..]) },
-        ))
+        Ok(RefMut::map(account_view.try_borrow_mut()?, |d| unsafe {
+            T::from_bytes_unchecked_mut(&mut d[8..])
+        }))
     }
 }
 
