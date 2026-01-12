@@ -13,7 +13,7 @@ pub struct Signer<'ix> {
 
 impl<'ix> Signer<'ix> {
     #[inline(always)]
-    pub fn address(&'ix self) -> &'ix Address {
+    pub fn address(&self) -> &'ix Address {
         self.account_view.address()
     }
 }
