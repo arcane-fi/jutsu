@@ -6,7 +6,7 @@
 mod accounts;
 pub use accounts::{
     interface::*, mutable::*, program::*, signer::*, system_account::*, unchecked_account::*,
-    zc_account::*,
+    zc_account::*, checked_address::*,
 };
 
 use hayabusa_common::{AccountView, Address};
