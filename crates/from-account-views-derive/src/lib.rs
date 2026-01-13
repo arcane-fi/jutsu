@@ -120,7 +120,7 @@ fn parse_meta(
             let values = args.iter().map(|kv| &kv.value);
 
             return Ok(quote! {
-                <#ty as FromAccountView<#info_lt>>::Meta<'_>::new(
+                <#ty as FromAccountView<#info_lt>>::Meta::new(
                     #(#values),*
                 )
             });
