@@ -406,14 +406,13 @@ name = "hayabusa-ser"
 version = "0.1.0"
 dependencies = [
  "bytemuck",
+ "hayabusa-common",
  "hayabusa-cpi",
  "hayabusa-discriminator",
  "hayabusa-errors",
  "hayabusa-system-program",
  "hayabusa-utility",
  "pinocchio-log",
- "solana-account-view",
- "solana-address",
  "solana-instruction-view",
 ]
 

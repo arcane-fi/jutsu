@@ -100,13 +100,14 @@ impl<'ix, T> FromAccountView<'ix> for ZcAccount<'ix, T>
 where
     T: Zc + Deserialize,
 {
-    type Meta<'a> = ()
+    type Meta<'a>
+        = ()
     where
         'ix: 'a;
 
     #[inline(always)]
     fn try_from_account_view<'a>(account_view: &'ix AccountView, _: Self::Meta<'a>) -> Result<Self>
-    where 
+    where
         'ix: 'a,
     {
         Ok(ZcAccount {

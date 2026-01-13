@@ -17,8 +17,11 @@ pub trait FromAccountView<'ix>: Sized {
     where
         'ix: 'a;
 
-    fn try_from_account_view<'a>(account_view: &'ix AccountView, meta: Self::Meta<'a>) -> Result<Self>
-    where 
+    fn try_from_account_view<'a>(
+        account_view: &'ix AccountView,
+        meta: Self::Meta<'a>,
+    ) -> Result<Self>
+    where
         'ix: 'a;
 }
 

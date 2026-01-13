@@ -13,13 +13,17 @@ impl<'ix, T> FromAccountView<'ix> for Mut<T>
 where
     T: FromAccountView<'ix> + WritableAllowed,
 {
-    type Meta<'a> = T::Meta<'a>
+    type Meta<'a>
+        = T::Meta<'a>
     where
         'ix: 'a;
 
     #[inline(always)]
-    fn try_from_account_view<'a>(account_view: &'ix AccountView, meta: Self::Meta<'a>) -> Result<Self>
-    where 
+    fn try_from_account_view<'a>(
+        account_view: &'ix AccountView,
+        meta: Self::Meta<'a>,
+    ) -> Result<Self>
+    where
         'ix: 'a,
     {
         if unlikely(!account_view.is_writable()) {

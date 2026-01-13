@@ -140,7 +140,7 @@ pub struct CounterAccount {
 #[derive(FromAccountViews)]
 pub struct ArgsTest<'ix> {
     pub user: Signer<'ix>,
-    #[args(addr = user.address())]
+    #[meta(addr = user.address())]
     pub test: TestAccount<'ix>,
 
 }

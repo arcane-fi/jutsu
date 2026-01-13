@@ -19,13 +19,14 @@ impl<'ix, T> FromAccountView<'ix> for Program<'ix, T>
 where
     T: ProgramId,
 {
-    type Meta<'a> = ()
+    type Meta<'a>
+        = ()
     where
         'ix: 'a;
 
     #[inline(always)]
     fn try_from_account_view<'a>(account_view: &'ix AccountView, _: Self::Meta<'a>) -> Result<Self>
-    where 
+    where
         'ix: 'a,
     {
         if unlikely(!account_view.executable()) {

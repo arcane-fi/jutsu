@@ -3,13 +3,12 @@
 
 use super::{Deserialize, DeserializeMut, Zc};
 use bytemuck::{AnyBitPattern, Pod};
+use hayabusa_common::{AccountView, Address, Ref, RefMut};
 use hayabusa_cpi::CpiCtx;
 use hayabusa_discriminator::Discriminator;
 use hayabusa_errors::{ErrorCode, ProgramError, Result};
 use hayabusa_system_program::instructions::{create_account, CreateAccount};
 use hayabusa_utility::{error_msg, hint::unlikely, Len, OwnerProgram};
-use solana_account_view::{AccountView, Ref, RefMut};
-use solana_address::Address;
 use solana_instruction_view::cpi::Signer;
 
 /// # Safety

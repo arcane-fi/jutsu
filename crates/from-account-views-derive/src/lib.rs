@@ -1,11 +1,11 @@
+// Copyright (c) 2026, Arcane Labs <dev@arcane.fi>
+// SPDX-License-Identifier: Apache-2.0
+
 use proc_macro::TokenStream;
 use quote::quote;
-use syn::{
-    parse_macro_input, spanned::Spanned, Data, DeriveInput, Fields, Ident, Type,
-    TypePath,
-};
+use syn::{parse_macro_input, spanned::Spanned, Data, DeriveInput, Fields, Ident, Type, TypePath};
 
-#[proc_macro_derive(FromAccountViews, attributes(args))]
+#[proc_macro_derive(FromAccountViews, attributes(meta))]
 pub fn derive_from_account_views(input: TokenStream) -> TokenStream {
     let input = parse_macro_input!(input as DeriveInput);
 
@@ -67,7 +67,7 @@ pub fn derive_from_account_views(input: TokenStream) -> TokenStream {
             Err(e) => return e.to_compile_error().into(),
         };
 
-        let meta_expr = match parse_args(&field.attrs, &outer, info_lt) {
+        let meta_expr = match parse_meta(&field.attrs, &outer, info_lt) {
             Ok(m) => m,
             Err(e) => return e.to_compile_error().into(),
         };
@@ -85,6 +85,7 @@ pub fn derive_from_account_views(input: TokenStream) -> TokenStream {
         impl #impl_generics FromAccountViews<#info_lt>
             for #struct_name #ty_generics #where_clause
         {
+            #[inline(always)]
             fn try_from_account_views(
                 account_views: &mut AccountIter<#info_lt>
             ) -> Result<Self> {
@@ -100,7 +101,6 @@ pub fn derive_from_account_views(input: TokenStream) -> TokenStream {
     expanded.into()
 }
 
-
 fn outer_type_ident(ty: &Type) -> Result<Ident, syn::Error> {
     match ty {
         Type::Path(TypePath { path, .. }) => Ok(path.segments.first().unwrap().ident.clone()),
@@ -108,13 +108,13 @@ fn outer_type_ident(ty: &Type) -> Result<Ident, syn::Error> {
     }
 }
 
-fn parse_args(
+fn parse_meta(
     attrs: &[syn::Attribute],
     outer: &Ident,
     info_lt: &syn::Lifetime,
 ) -> Result<proc_macro2::TokenStream, syn::Error> {
     for attr in attrs {
-        if attr.path().is_ident("args") {
+        if attr.path().is_ident("meta") {
             let args = attr.parse_args_with(
                 syn::punctuated::Punctuated::<syn::MetaNameValue, syn::Token![,]>::parse_terminated,
             )?;
@@ -132,4 +132,3 @@ fn parse_args(
 
     Ok(quote! { () })
 }
-

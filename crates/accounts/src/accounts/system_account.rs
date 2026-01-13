@@ -12,13 +12,14 @@ pub struct SystemAccount<'ix> {
 }
 
 impl<'ix> FromAccountView<'ix> for SystemAccount<'ix> {
-    type Meta<'a> = ()
+    type Meta<'a>
+        = ()
     where
         'ix: 'a;
 
     #[inline(always)]
     fn try_from_account_view<'a>(account_view: &'ix AccountView, _: Self::Meta<'a>) -> Result<Self>
-    where 
+    where
         'ix: 'a,
     {
         if unlikely(!account_view.owned_by(&hayabusa_system_program::ID)) {
