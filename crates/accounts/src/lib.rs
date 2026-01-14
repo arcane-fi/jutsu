@@ -25,6 +25,8 @@ pub trait FromAccountView<'ix>: Sized {
         'ix: 'a;
 }
 
+pub struct NoMeta;
+
 pub trait ToAccountView {
     fn to_account_view(&self) -> &AccountView;
 }

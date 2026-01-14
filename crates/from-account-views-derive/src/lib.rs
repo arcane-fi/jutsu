@@ -127,5 +127,5 @@ fn parse_meta(
         }
     }
 
-    Ok(quote! { () })
+    Ok(quote! { NoMeta })
 }

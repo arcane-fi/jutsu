@@ -1,7 +1,7 @@
 // Copyright (c) 2026, Arcane Labs <dev@arcane.fi>
 // SPDX-License-Identifier: Apache-2.0
 
-use crate::{FromAccountView, ToAccountView, WritableAllowed};
+use crate::{FromAccountView, NoMeta, ToAccountView, WritableAllowed};
 use core::ops::Deref;
 use hayabusa_common::AccountView;
 use hayabusa_errors::{ErrorCode, ProgramError, Result};
@@ -13,7 +13,7 @@ pub struct SystemAccount<'ix> {
 
 impl<'ix> FromAccountView<'ix> for SystemAccount<'ix> {
     type Meta<'a>
-        = ()
+        = NoMeta
     where
         'ix: 'a;
 

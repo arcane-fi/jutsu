@@ -1,7 +1,7 @@
 // Copyright (c) 2026, Arcane Labs <dev@arcane.fi>
 // SPDX-License-Identifier: Apache-2.0
 
-use crate::{FromAccountView, ProgramId, ToAccountView};
+use crate::{FromAccountView, NoMeta, ProgramId, ToAccountView};
 use core::ops::Deref;
 use hayabusa_common::{address_eq, AccountView, Address};
 use hayabusa_errors::{ErrorCode, ProgramError, Result};
@@ -20,7 +20,7 @@ where
     T: ProgramId,
 {
     type Meta<'a>
-        = ()
+        = NoMeta
     where
         'ix: 'a;
 
