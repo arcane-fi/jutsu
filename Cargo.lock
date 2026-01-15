@@ -210,7 +210,7 @@ dependencies = [
 
 [[package]]
 name = "hayabusa"
-version = "0.1.0"
+version = "0.2.0"
 dependencies = [
  "bytemuck",
  "hayabusa-account-attribute-macro",
@@ -223,6 +223,8 @@ dependencies = [
  "hayabusa-entrypoint",
  "hayabusa-errors",
  "hayabusa-errors-attribute-macro",
+ "hayabusa-events",
+ "hayabusa-events-attribute-macro",
  "hayabusa-from-account-views-derive",
  "hayabusa-instruction-dispatch-macro",
  "hayabusa-len-derive",
@@ -243,7 +245,7 @@ dependencies = [
 
 [[package]]
 name = "hayabusa-account-attribute-macro"
-version = "0.1.0"
+version = "0.2.0"
 dependencies = [
  "proc-macro2",
  "quote",
@@ -252,7 +254,7 @@ dependencies = [
 
 [[package]]
 name = "hayabusa-accounts"
-version = "0.1.0"
+version = "0.2.0"
 dependencies = [
  "hayabusa-common",
  "hayabusa-context",
@@ -266,7 +268,7 @@ dependencies = [
 
 [[package]]
 name = "hayabusa-cli"
-version = "0.1.0"
+version = "0.2.0"
 dependencies = [
  "anyhow",
  "clap",
@@ -274,7 +276,7 @@ dependencies = [
 
 [[package]]
 name = "hayabusa-common"
-version = "0.1.0"
+version = "0.2.0"
 dependencies = [
  "solana-account-view",
  "solana-address",
@@ -282,7 +284,7 @@ dependencies = [
 
 [[package]]
 name = "hayabusa-context"
-version = "0.1.0"
+version = "0.2.0"
 dependencies = [
  "hayabusa-common",
  "hayabusa-errors",
@@ -292,7 +294,7 @@ dependencies = [
 
 [[package]]
 name = "hayabusa-cpi"
-version = "0.1.0"
+version = "0.2.0"
 dependencies = [
  "hayabusa-errors",
  "hayabusa-utility",
@@ -305,14 +307,14 @@ dependencies = [
 
 [[package]]
 name = "hayabusa-decode-instruction"
-version = "0.1.0"
+version = "0.2.0"
 dependencies = [
  "hayabusa-errors",
 ]
 
 [[package]]
 name = "hayabusa-discriminator"
-version = "0.1.0"
+version = "0.2.0"
 dependencies = [
  "hayabusa-errors",
  "hayabusa-utility",
@@ -322,7 +324,7 @@ dependencies = [
 
 [[package]]
 name = "hayabusa-discriminator-derive"
-version = "0.1.0"
+version = "0.2.0"
 dependencies = [
  "proc-macro2",
  "quote",
@@ -332,7 +334,7 @@ dependencies = [
 
 [[package]]
 name = "hayabusa-entrypoint"
-version = "0.1.0"
+version = "0.2.0"
 dependencies = [
  "hayabusa-syscalls",
  "hayabusa-utility",
@@ -344,14 +346,30 @@ dependencies = [
 
 [[package]]
 name = "hayabusa-errors"
-version = "0.1.0"
+version = "0.2.0"
 dependencies = [
  "solana-program-error",
 ]
 
 [[package]]
 name = "hayabusa-errors-attribute-macro"
-version = "0.1.0"
+version = "0.2.0"
+dependencies = [
+ "proc-macro2",
+ "quote",
+ "syn 2.0.111",
+]
+
+[[package]]
+name = "hayabusa-events"
+version = "0.2.0"
+dependencies = [
+ "hayabusa-common",
+]
+
+[[package]]
+name = "hayabusa-events-attribute-macro"
+version = "0.2.0"
 dependencies = [
  "proc-macro2",
  "quote",
@@ -360,7 +378,7 @@ dependencies = [
 
 [[package]]
 name = "hayabusa-from-account-views-derive"
-version = "0.1.0"
+version = "0.2.0"
 dependencies = [
  "proc-macro2",
  "quote",
@@ -369,11 +387,11 @@ dependencies = [
 
 [[package]]
 name = "hayabusa-instruction-dispatch-macro"
-version = "0.1.0"
+version = "0.2.0"
 
 [[package]]
 name = "hayabusa-len-derive"
-version = "0.1.0"
+version = "0.2.0"
 dependencies = [
  "proc-macro2",
  "quote",
@@ -383,7 +401,7 @@ dependencies = [
 
 [[package]]
 name = "hayabusa-owner-program-derive"
-version = "0.1.0"
+version = "0.2.0"
 dependencies = [
  "proc-macro2",
  "quote",
@@ -393,7 +411,7 @@ dependencies = [
 
 [[package]]
 name = "hayabusa-pda"
-version = "0.1.0"
+version = "0.2.0"
 dependencies = [
  "hayabusa-errors",
  "hayabusa-syscalls",
@@ -403,7 +421,7 @@ dependencies = [
 
 [[package]]
 name = "hayabusa-ser"
-version = "0.1.0"
+version = "0.2.0"
 dependencies = [
  "bytemuck",
  "hayabusa-common",
@@ -418,7 +436,7 @@ dependencies = [
 
 [[package]]
 name = "hayabusa-ser-derive"
-version = "0.1.0"
+version = "0.2.0"
 dependencies = [
  "proc-macro2",
  "quote",
@@ -428,7 +446,7 @@ dependencies = [
 
 [[package]]
 name = "hayabusa-syscalls"
-version = "0.1.0"
+version = "0.2.0"
 dependencies = [
  "hayabusa-errors",
  "solana-address",
@@ -437,7 +455,7 @@ dependencies = [
 
 [[package]]
 name = "hayabusa-system-program"
-version = "0.1.0"
+version = "0.2.0"
 dependencies = [
  "hayabusa-cpi",
  "hayabusa-errors",
@@ -450,7 +468,7 @@ dependencies = [
 
 [[package]]
 name = "hayabusa-sysvars"
-version = "0.1.0"
+version = "0.2.0"
 dependencies = [
  "hayabusa-common",
  "hayabusa-errors",
@@ -461,7 +479,7 @@ dependencies = [
 
 [[package]]
 name = "hayabusa-token"
-version = "0.1.0"
+version = "0.2.0"
 dependencies = [
  "hayabusa-accounts",
  "hayabusa-common",
@@ -475,7 +493,7 @@ dependencies = [
 
 [[package]]
 name = "hayabusa-token-interface"
-version = "0.1.0"
+version = "0.2.0"
 dependencies = [
  "hayabusa-accounts",
  "hayabusa-common",
@@ -485,7 +503,7 @@ dependencies = [
 
 [[package]]
 name = "hayabusa-token2022"
-version = "0.1.0"
+version = "0.2.0"
 dependencies = [
  "hayabusa-accounts",
  "hayabusa-common",
@@ -499,7 +517,7 @@ dependencies = [
 
 [[package]]
 name = "hayabusa-utility"
-version = "0.1.0"
+version = "0.2.0"
 dependencies = [
  "hayabusa-errors",
  "pinocchio-log",

@@ -35,7 +35,7 @@ fn integration() {
     svm.set_account(counter_account_pk, counter_account).unwrap();
 
     let ix_data = {
-        const UPDATE_COUNTER_DISCRIMINATOR: [u8; 8] = [231, 120, 160, 18, 72, 164, 104, 62];
+        const UPDATE_COUNTER_DISCRIMINATOR: [u8; 8] = [18, 183, 6, 47, 227, 170, 61, 195];
         let mut data = UPDATE_COUNTER_DISCRIMINATOR.to_vec();
         data.extend_from_slice(&1u64.to_le_bytes());
         data

@@ -54,6 +54,10 @@ impl<'ix> DecodeIx<'ix> for UpdateCounterIx {
 fn update_counter<'ix>(ctx: Ctx<'ix, UpdateCounter<'ix>>, amount: u64) -> Result<()> {
     let mut counter = ctx.counter.try_deserialize_mut()?;
 
+    emit!(TestEvent {
+        value: 1,
+    });
+
     counter.count += amount;
 
     Ok(())
@@ -68,8 +72,8 @@ pub struct UpdateCounter<'ix> {
 impl<'ix> FromAccountViews<'ix> for UpdateCounter<'ix> {
     #[inline(always)]
     fn try_from_account_views(account_views: &mut AccountIter<'ix>) -> Result<Self> {
-        let user = Signer::try_from_account_view(account_views.next()?, ())?;
-        let counter = Mut::try_from_account_view(account_views.next()?, ())?;
+        let user = Signer::try_from_account_view(account_views.next()?, NoMeta)?;
+        let counter = Mut::try_from_account_view(account_views.next()?, NoMeta)?;
 
         Ok(UpdateCounter {
             user,
@@ -123,11 +127,11 @@ fn noop<'ix>(_: Ctx<'ix, NoOp>) -> Result<()> {
     Ok(())
 }
 
-pub struct NoOp {}
+pub struct NoOp;
 
 impl<'ix> FromAccountViews<'ix> for NoOp {
     fn try_from_account_views(_: &mut AccountIter<'ix>) -> Result<Self> {
-        Ok(NoOp {})
+        Ok(NoOp)
     }
 }
 
@@ -177,5 +181,10 @@ impl<'ix> FromAccountView<'ix> for TestAccount<'ix> {
 #[account]
 #[derive(OwnerProgram, FromBytesUnchecked)]
 pub struct Test {
+    pub value: u64,
+}
+
+#[event]
+pub struct TestEvent {
     pub value: u64,
 }

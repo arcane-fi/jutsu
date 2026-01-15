@@ -4,7 +4,7 @@ exclude = ["examples"]
 resolver = "2"
 
 [workspace.package]
-version = "0.1.0"
+version = "0.2.0"
 edition = "2021"
 license = "Apache-2.0"
 authors = ["Levi Bland <levi@arcane.fi>"]
@@ -24,28 +24,30 @@ solana-account-view = "1.0"
 solana-instruction-view = "1.0"
 solana-program-error = "3.0"
 solana-define-syscall = "4.0"
-hayabusa-accounts = { version = "0.1.0", path = "crates/accounts" }
-hayabusa-account-attribute-macro = { version = "0.1.0", path = "crates/account-attribute-macro" }
-hayabusa-discriminator = { version = "0.1.0", path = "crates/discriminator" }
-hayabusa-discriminator-derive = { version = "0.1.0", path = "crates/discriminator-derive" }
-hayabusa-decode-instruction = { version = "0.1.0", path = "crates/decode-instruction" }
-hayabusa-errors = { version = "0.1.0", path = "crates/errors" }
-hayabusa-errors-attribute-macro = { version = "0.1.0", path = "crates/errors-attribute-macro" }
-hayabusa-pda = { version = "0.1.0", path = "crates/pda" }
-hayabusa-utility = { version = "0.1.0", path = "crates/utility" }
-hayabusa-context = { version = "0.1.0", path = "crates/context" }
-hayabusa-ser = { version = "0.1.0", path = "crates/ser" }
-hayabusa-instruction-dispatch-macro = { version = "0.1.0", path = "crates/instruction-dispatch-macro" }
-hayabusa-len-derive = { version = "0.1.0", path = "crates/len-derive" }
-hayabusa-owner-program-derive = { version = "0.1.0", path = "crates/owner-program-derive" }
-hayabusa-ser-derive = { version = "0.1.0", path = "crates/ser-derive" }
-hayabusa-cpi = { version = "0.1.0", path = "crates/cpi" }
-hayabusa-from-account-views-derive = { version = "0.1.0", path = "crates/from-account-views-derive" }
-hayabusa-system-program = { version = "0.1.0", path = "crates/system-program" }
-hayabusa-token = { version = "0.1.0", path = "crates/token" }
-hayabusa-token2022 = { version = "0.1.0", path = "crates/token2022" }
-hayabusa-token-interface = { version = "0.1.0", path = "crates/token-interface" }
-hayabusa-entrypoint = { version = "0.1.0", path = "crates/entrypoint" }
-hayabusa-syscalls = { version = "0.1.0", path = "crates/syscalls" }
-hayabusa-sysvars = { version = "0.1.0", path = "crates/sysvars" }
-hayabusa-common = { version = "0.1.0", path = "crates/common" }
+hayabusa-accounts = { version = "0.2.0", path = "crates/accounts" }
+hayabusa-account-attribute-macro = { version = "0.2.0", path = "crates/account-attribute-macro" }
+hayabusa-discriminator = { version = "0.2.0", path = "crates/discriminator" }
+hayabusa-discriminator-derive = { version = "0.2.0", path = "crates/discriminator-derive" }
+hayabusa-decode-instruction = { version = "0.2.0", path = "crates/decode-instruction" }
+hayabusa-errors = { version = "0.2.0", path = "crates/errors" }
+hayabusa-errors-attribute-macro = { version = "0.2.0", path = "crates/errors-attribute-macro" }
+hayabusa-pda = { version = "0.2.0", path = "crates/pda" }
+hayabusa-utility = { version = "0.2.0", path = "crates/utility" }
+hayabusa-context = { version = "0.2.0", path = "crates/context" }
+hayabusa-ser = { version = "0.2.0", path = "crates/ser" }
+hayabusa-instruction-dispatch-macro = { version = "0.2.0", path = "crates/instruction-dispatch-macro" }
+hayabusa-len-derive = { version = "0.2.0", path = "crates/len-derive" }
+hayabusa-owner-program-derive = { version = "0.2.0", path = "crates/owner-program-derive" }
+hayabusa-ser-derive = { version = "0.2.0", path = "crates/ser-derive" }
+hayabusa-cpi = { version = "0.2.0", path = "crates/cpi" }
+hayabusa-from-account-views-derive = { version = "0.2.0", path = "crates/from-account-views-derive" }
+hayabusa-system-program = { version = "0.2.0", path = "crates/system-program" }
+hayabusa-token = { version = "0.2.0", path = "crates/token" }
+hayabusa-token2022 = { version = "0.2.0", path = "crates/token2022" }
+hayabusa-token-interface = { version = "0.2.0", path = "crates/token-interface" }
+hayabusa-entrypoint = { version = "0.2.0", path = "crates/entrypoint" }
+hayabusa-syscalls = { version = "0.2.0", path = "crates/syscalls" }
+hayabusa-sysvars = { version = "0.2.0", path = "crates/sysvars" }
+hayabusa-common = { version = "0.2.0", path = "crates/common" }
+hayabusa-events = { version = "0.2.0", path = "crates/events" }
+hayabusa-events-attribute-macro = { version = "0.2.0", path = "crates/events-attribute-macro" }

@@ -34,6 +34,8 @@ pub mod prelude {
     pub use hayabusa_ser::*;
     pub use hayabusa_ser_derive::*;
     pub use hayabusa_utility::{hint::unlikely, take_bytes, *};
+    pub use hayabusa_events::*;
+    pub use hayabusa_events_attribute_macro::event;
 
     #[cfg(feature = "std")]
     pub use hayabusa_entrpouint::default_panic_handler;

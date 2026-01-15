@@ -162,6 +162,7 @@ impl<'ix> DecodeIx<'ix> for UpdateCounterIx {
 }
 fn update_counter<'ix>(ctx: Ctx<'ix, UpdateCounter<'ix>>, amount: u64) -> Result<()> {
     let mut counter = ctx.counter.try_deserialize_mut()?;
+    TestEvent { value: 1 }.emit();
     counter.count += amount;
     Ok(())
 }
@@ -172,8 +173,8 @@ pub struct UpdateCounter<'ix> {
 impl<'ix> FromAccountViews<'ix> for UpdateCounter<'ix> {
     #[inline(always)]
     fn try_from_account_views(account_views: &mut AccountIter<'ix>) -> Result<Self> {
-        let user = Signer::try_from_account_view(account_views.next()?, ())?;
-        let counter = Mut::try_from_account_view(account_views.next()?, ())?;
+        let user = Signer::try_from_account_view(account_views.next()?, NoMeta)?;
+        let counter = Mut::try_from_account_view(account_views.next()?, NoMeta)?;
         Ok(UpdateCounter { user, counter })
     }
 }
@@ -217,10 +218,24 @@ pub struct InitializeCounter<'ix> {
     pub system_program: Program<'ix, System>,
 }
 impl<'ix> FromAccountViews<'ix> for InitializeCounter<'ix> {
+    #[inline(always)]
     fn try_from_account_views(account_views: &mut AccountIter<'ix>) -> Result<Self> {
-        let user = Mut::try_from_account_view(account_views.next()?, ())?;
-        let counter = Mut::try_from_account_view(account_views.next()?, ())?;
-        let system_program = Program::try_from_account_view(account_views.next()?, ())?;
+        let user = <Mut<
+            Signer<'ix>,
+        > as FromAccountView<
+            'ix,
+        >>::try_from_account_view(account_views.next()?, NoMeta)?;
+        let counter = <Mut<
+            ZcAccount<'ix, CounterAccount>,
+        > as FromAccountView<
+            'ix,
+        >>::try_from_account_view(account_views.next()?, NoMeta)?;
+        let system_program = <Program<
+            'ix,
+            System,
+        > as FromAccountView<
+            'ix,
+        >>::try_from_account_view(account_views.next()?, NoMeta)?;
         Ok(Self {
             user,
             counter,
@@ -252,10 +267,10 @@ impl<'ix> DecodeIx<'ix> for NoOpIx {
 fn noop<'ix>(_: Ctx<'ix, NoOp>) -> Result<()> {
     Ok(())
 }
-pub struct NoOp {}
+pub struct NoOp;
 impl<'ix> FromAccountViews<'ix> for NoOp {
     fn try_from_account_views(_: &mut AccountIter<'ix>) -> Result<Self> {
-        Ok(NoOp {})
+        Ok(NoOp)
     }
 }
 #[repr(C)]
@@ -315,15 +330,24 @@ impl OwnerProgram for CounterAccount {
 }
 pub struct ArgsTest<'ix> {
     pub user: Signer<'ix>,
-    #[args(addr = user.address())]
+    #[meta(addr = user.address())]
     pub test: TestAccount<'ix>,
 }
 impl<'ix> FromAccountViews<'ix> for ArgsTest<'ix> {
+    #[inline(always)]
     fn try_from_account_views(account_views: &mut AccountIter<'ix>) -> Result<Self> {
-        let user = Signer::try_from_account_view(account_views.next()?, ())?;
-        let test = TestAccount::try_from_account_view(
+        let user = <Signer<
+            'ix,
+        > as FromAccountView<
+            'ix,
+        >>::try_from_account_view(account_views.next()?, NoMeta)?;
+        let test = <TestAccount<
+            'ix,
+        > as FromAccountView<
+            'ix,
+        >>::try_from_account_view(
             account_views.next()?,
-            <TestAccount as FromAccountView<'ix>>::Meta::new(user.address()),
+            <TestAccount<'ix> as FromAccountView<'ix>>::Meta::new(user.address()),
         )?;
         Ok(Self { user, test })
     }
@@ -411,5 +435,39 @@ impl OwnerProgram for Test {
 impl FromBytesUnchecked for Test {
     unsafe fn from_bytes_unchecked<'a>(bytes: &'a [u8]) -> &'a Test {
         &*(bytes.as_ptr() as *const Test)
+    }
+}
+pub struct TestEvent {
+    pub value: u64,
+}
+impl Discriminator for TestEvent {
+    const DISCRIMINATOR: &'static [u8] = &[
+        67u8, 250u8, 47u8, 235u8, 20u8, 103u8, 152u8, 144u8,
+    ];
+}
+impl EventBuilder for TestEvent {
+    fn emit(&self) {
+        const __TOTAL_SIZE: usize = 8usize + <u64 as EventField>::SIZE;
+        let mut __buf: [u8; __TOTAL_SIZE] = [0u8; __TOTAL_SIZE];
+        __buf[..8].copy_from_slice(&Self::DISCRIMINATOR);
+        self.value.write(&mut __buf[8usize..8usize + <u64 as EventField>::SIZE]);
+        const __HEX_LEN: usize = __TOTAL_SIZE * 2;
+        let mut __hex: [u8; __HEX_LEN] = [0u8; __HEX_LEN];
+        {
+            const HEX: &[u8; 16] = b"0123456789abcdef";
+            let mut i = 0;
+            while i < __TOTAL_SIZE {
+                let b = __buf[i];
+                __hex[2 * i] = HEX[(b >> 4) as usize];
+                __hex[2 * i + 1] = HEX[(b & 0x0f) as usize];
+                i += 1;
+            }
+        }
+        const __PREFIX_LEN: usize = 7;
+        const __LOG_LEN: usize = __PREFIX_LEN + __HEX_LEN;
+        let mut __logger = logger::Logger::<__LOG_LEN>::default();
+        __logger.append("EVENT: ");
+        __logger.append(unsafe { core::str::from_utf8_unchecked(&__hex) });
+        __logger.log();
     }
 }
